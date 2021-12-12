@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splashscreen/splashscreen.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/type_screen.dart';
@@ -13,22 +13,29 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool loggedIn = false;
-  bool userType = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const SplashScreen(
-        // seconds: 3,
-        // navigateAfterSeconds: new TypeScreen(),
-        // title: new Text(
-        //   'Where2Buy',
-        //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-        // ),
-        // backgroundColor: Colors.white,
-        // loaderColor: Colors.black,
-    ),
+      body: AnimatedSplashScreen.withScreenFunction(
+        splash: Column(
+          children: const [
+            Icon(Icons.shopping_cart, size: 50),
+            SizedBox(width: 10),
+            Text('Where2Buy',style:TextStyle(fontSize: 25,fontWeight: FontWeight.bold))
+          ],
+        ),
+        screenFunction: () async {
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          bool loggedIn = pref.getBool('LoggedIn') ?? false;
+          return loggedIn
+              ? pref.getString('type') == 'user'
+                  ? const UserHomeScreen()
+                  : const StoreHomeScreen()
+              : const TypeScreen();
+        },
+        splashTransition: SplashTransition.fadeTransition,
+        // pageTransitionType: PageTransitionType.scale,
+      ),
     );
   }
 
