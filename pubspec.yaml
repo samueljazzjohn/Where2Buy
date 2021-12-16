@@ -35,7 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   animated_splash_screen: ^1.1.0
+  page_transition: "^2.0.1-nullsafety.0"
   shared_preferences: ^2.0.11
+  fluttertoast: ^8.0.8
 
 
 dev_dependencies:

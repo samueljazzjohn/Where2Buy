@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({ Key? key }) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color:Colors.redAccent
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_cart, size: 80),
+          ],
+        ),
+      )),
     );
   }
 }
