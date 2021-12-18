@@ -85,8 +85,8 @@ class TypeScreen extends StatelessWidget {
                           } else {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              print(typeNotifier);
-                              return LoginScreen();
+                              print(typeNotifier.value);
+                              return LoginScreen(type: typeNotifier.value,);
                             }));
                           }
                         },
