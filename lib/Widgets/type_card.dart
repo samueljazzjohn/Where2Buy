@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:where2buy/assets.dart';
 
 ValueNotifier<String> typeNotifier = ValueNotifier<String>('nodata');
 
-
 class TypeCard extends StatelessWidget {
-  final double cardWidth;
-  final double cardHeight;
-  final IconData cardIcon;
+  final String cardImage;
   final String cardName;
   final String type;
   const TypeCard(
       {Key? key,
-      required this.cardWidth,
-      required this.cardHeight,
-      required this.cardIcon,
+      required this.cardImage,
       required this.type,
       // required this.value,
       required this.cardName})
@@ -28,40 +24,31 @@ class TypeCard extends StatelessWidget {
       },
       child: ValueListenableBuilder(
         valueListenable: typeNotifier,
-        builder: (BuildContext context, String value,  child) {
+        builder: (BuildContext context, String value, child) {
           return Card(
-            margin: const EdgeInsets.all(12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: (value == type && value != 'nodata')
-                    ? const BorderSide(width: 1, color: Colors.blue)
-                    : const BorderSide(width: 1, color: Color(0Xff7E7E7E))),
-            child: SizedBox(
-              width: cardWidth,
-              height: cardHeight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Icon(
-                      cardIcon,
-                      size: 45,
-                    ),
-                  ),
-                  // const SizedBox(width: 15),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      cardName,
-                      style:const TextStyle(fontSize: 20),
-                    ),
-                  )
-                  // Expanded(flex: 2, child: cardName!=null  ? Text(cardName!) : SizedBox())
-                ],
+              // margin: EdgeInsets.symmetric(vertical: 10),
+              elevation: type==value && type!='nodata' ? 10 : 5 ,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
-            ),
-          );
+              color: type==value && type!='nodata' ? Colors.red[100] : Colors.red[50],
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    cardImage,
+                    width: 60,
+                    height: 60,
+                  ),
+                ),
+                Text(
+                  cardName,
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                )
+              ]));
         },
       ),
     );

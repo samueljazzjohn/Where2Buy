@@ -5,6 +5,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/type_screen.dart';
+import 'package:where2buy/assets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -16,14 +17,17 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: AnimatedSplashScreen.withScreenFunction(
+          backgroundColor: Color(0Xb09496),
           splash: Column(
-            children: const [
-              Icon(Icons.shopping_cart, size: 40),
-              SizedBox(width: 5),
-              Text('Where2Buy',style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold))
+            children: [
+              Image.asset(cart1,width:45,height: 45, ),
+              SizedBox(width: 10),
+              Text('Where2Buy',style:TextStyle(color:Colors.redAccent , fontSize: 20,fontWeight: FontWeight.bold))
             ],
           ),
           screenFunction: () async {

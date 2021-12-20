@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/signup_screen.dart';
 import 'package:where2buy/Screen/type_screen.dart';
@@ -27,9 +28,22 @@ class LoginScreen extends StatelessWidget {
           children: [
 
             // logo
-            const Expanded(
+             Expanded(
                 flex: 2,
-                child: Center(child: Icon(Icons.shopping_cart, size: 80))),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top:30.0,bottom: 40),
+                      child: Text('Login',style: TextStyle(color: Colors.black87,fontSize: 15,fontWeight: FontWeight.bold ),),
+                    ),
+                    Center(child: Image.asset(
+                    cart1,
+                    width: 80,
+                    height: 80,
+                    // color: Colors.redAccent,
+            )),
+                  ],
+                )),
 
             // Login details
             Expanded(
@@ -55,11 +69,15 @@ class LoginScreen extends StatelessWidget {
                         isPass: true,
                       ),
                       const SizedBox(height: 15),
+
+                      // Login Button
                       const Button(
                         isIcon: false,
                         btnText: 'Login',
                         nextScreen: UserHomeScreen(),
                       ),
+
+                      // Forgot Password
                       TextButton(
                           onPressed: () => Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -68,15 +86,18 @@ class LoginScreen extends StatelessWidget {
                           child: const Text(
                             'Forgot password?',
                             style: TextStyle(
-                                color: Colors.black87,
+                                fontSize: 12,
+                                color: Colors.black38,
                                 decoration: TextDecoration.underline),
                           )),
                       const SizedBox(height: 5),
                       // type=='user'?
+                      
+                      // Google Signin
                       Button(
                         isIcon: true,
                         btnText: 'Continue with Google',
-                        nextScreen: UserHomeScreen(),
+                        nextScreen: type=='user' ? UserHomeScreen() : StoreHomeScreen(),
                         assetName: google,
                       )
                       // : const SizedBox(),

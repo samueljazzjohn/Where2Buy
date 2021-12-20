@@ -12,10 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Where2Buy',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        fontFamily:'Georgia'
-      ),
+      theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'Georgia'),
       home: const SplashScreen(),
     );
   }
