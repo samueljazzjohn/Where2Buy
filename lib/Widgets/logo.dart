@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../assets.dart';
-
 class Logo extends StatelessWidget {
   final String logoName;
   const Logo({Key? key, required this.logoName}) : super(key: key);

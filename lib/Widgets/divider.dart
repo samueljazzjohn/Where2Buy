@@ -11,12 +11,12 @@ class ColumnDiveder extends StatelessWidget {
         children:const [
           Expanded(child: Padding(
             padding: EdgeInsets.only(right:2.0),
-            child: Divider(color:Colors.black12),
+            child: Divider(color:Colors.black38),
           )),
-          Text('Or Continue with',style: TextStyle(color:Colors.black12)),
+          Text('Or Continue with',style: TextStyle(color:Colors.black38)),
           Expanded(child: Padding(
             padding: EdgeInsets.only(left:2.0),
-            child: Divider(color:Colors.black12),
+            child: Divider(color:Colors.black38),
           ))
         ]
       ) ,

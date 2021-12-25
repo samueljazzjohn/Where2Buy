@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:where2buy/assets.dart';
+import 'package:where2buy/config.dart';
 
 class Button extends StatelessWidget {
   final bool isIcon;
@@ -20,16 +20,16 @@ class Button extends StatelessWidget {
         style: ElevatedButton.styleFrom(
             maximumSize: const Size(400, 50),
             minimumSize: const Size(300, 50),
-            primary: !isIcon ? Colors.black87 : Colors.white,
-            onPrimary: !isIcon ? Colors.white : Colors.black87,
+            primary: !isIcon ? Colors.black54 : Colors.white,
+            onPrimary: !isIcon ? Colors.white : Colors.black54,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            side: BorderSide(width: 1, color: Colors.black87)),
+            side: BorderSide(width: 1, color: Colors.black54)),
         onPressed: () =>
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return nextScreen;
             })),
-        icon: isIcon ? ImageIcon(AssetImage(assetName!)) : SizedBox(),
+        icon: isIcon && assetName!=null ? ImageIcon(AssetImage(assetName!)) : SizedBox(),
         label: Text(btnText));
   }
 }

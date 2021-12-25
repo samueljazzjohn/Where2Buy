@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:where2buy/Screen/login_screen.dart';
+import 'package:where2buy/Screen/welcome_screen.dart';
 import 'package:where2buy/Widgets/type_card.dart';
-import 'package:where2buy/assets.dart';
+import 'package:where2buy/config.dart';
 
 ValueNotifier<bool> selectedNotifier = ValueNotifier(false);
 
@@ -67,7 +69,7 @@ class TypeScreen extends StatelessWidget {
                     child:Container(
                       margin: EdgeInsets.only(right:10),
                       width:size.width * 0.30,
-                      height:size.width * 0.35,
+                      height:130,
                       child: TypeCard(cardImage: shop, type: 'store', cardName: 'Store')
                     )
                   ),
@@ -77,7 +79,7 @@ class TypeScreen extends StatelessWidget {
                   child:Container(
                       margin: EdgeInsets.only(left:10),
                       width:size.width * 0.30,
-                      height:size.width * 0.35,
+                      height:130,
                       child: TypeCard(cardImage: customer, type: 'user', cardName: 'User')
                     )
                   ),
@@ -86,9 +88,9 @@ class TypeScreen extends StatelessWidget {
             ]))),
           ),
           Expanded(
-              flex: 1,
+              flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(right: 15.0,bottom: 15),
                 child: Align(
                     alignment: Alignment.bottomRight,
                     child: IconButton(
@@ -97,7 +99,7 @@ class TypeScreen extends StatelessWidget {
                             Fluttertoast.showToast(
                                 msg: "Please Select one type!!!",
                                 toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
+                                gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Colors.red,
                                 textColor: Colors.white,
@@ -106,13 +108,13 @@ class TypeScreen extends StatelessWidget {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               print(typeNotifier.value);
-                              return LoginScreen(
+                              return WelcomeScreen(
                                 type: typeNotifier.value,
                               );
                             }));
                           }
                         },
-                        icon: Icon(Icons.arrow_right))),
+                        icon: SvgPicture.asset(arrowRight,color:primaryBlack,width: 180,height: 180, ))),
               ))
         ],
       ),

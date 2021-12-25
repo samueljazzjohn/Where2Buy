@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:where2buy/assets.dart';
+import 'package:where2buy/config.dart';
 
 ValueNotifier<String> typeNotifier = ValueNotifier<String>('nodata');
 
@@ -27,11 +27,12 @@ class TypeCard extends StatelessWidget {
         builder: (BuildContext context, String value, child) {
           return Card(
               // margin: EdgeInsets.symmetric(vertical: 10),
-              elevation: type==value && type!='nodata' ? 10 : 5 ,
+              elevation: type==value && type!='nodata' ? 15 : 5 ,
+              shadowColor: type==value && type!='nodata' ? Colors.redAccent : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              color: type==value && type!='nodata' ? Colors.red[100] : Colors.red[50],
+              color: type==value && type!='nodata' ? Colors.white: Colors.white,
               child: Column(children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
