@@ -23,3 +23,5 @@ String menu = 'assets/icons/menu-4-fill.svg';
 String search = 'assets/icons/search-line.svg';
 String arrowRight = 'assets/icons/arrow-right-circle-fill.svg';
 String camara = 'assets/icons/camera-line.svg';
+String phone = 'assets/icons/phone-fill.svg';
+String map = 'assets/icons/map-pin-2-fill.svg';

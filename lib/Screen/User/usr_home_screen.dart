@@ -1,95 +1,105 @@
 import 'package:flutter/material.dart';
+import 'package:where2buy/Components/app_bar.dart';
+import 'package:where2buy/Components/shop_list.dart';
 import 'package:where2buy/Screen/User/shop_card_list.dart';
+import 'package:where2buy/Screen/User/shop_list_screen.dart';
 import 'package:where2buy/Screen/User/shops_titlebar.dart';
 import 'package:where2buy/Screen/type_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:where2buy/Widgets/header_with_searchbox.dart';
+import 'package:where2buy/Widgets/navigation_drawer_widget.dart';
 import 'package:where2buy/config.dart';
 
-class UserHomeScreen extends StatelessWidget {
+class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserHomeScreen> createState() => _UserHomeScreenState();
+}
+
+class _UserHomeScreenState extends State<UserHomeScreen> {
+  final GlobalKey<ScaffoldState> _userKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation:0,
-        backgroundColor: primaryBlack,
-        foregroundColor: Colors.white,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right:20.0),
-            child: IconButton(onPressed: (){}, icon: SvgPicture.asset(camara,color:Colors.white,width:50,height:50)),
-          )
-        ],
-        leading: IconButton(
-          onPressed: (){},
-           icon: SvgPicture.asset(menu,color:Colors.white)
-           )
-      ),
-      // drawer: Drawer(
-      //   child: ListView(
-      //     children: [
-      //       DrawerHeader(
-      //         padding: EdgeInsets.only(top: 20, left: 15, bottom: 15),
-      //         child: Column(
-      //           children: [
-      //             Expanded(child: Align(alignment: Alignment.centerLeft,child: Row(
-      //               children: [
-      //                 Icon(Icons.shopping_cart,color: Colors.white, size: 45,),
-      //                 SizedBox(width: 10),
-      //                 Text('Where2Buy',style:TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.white)),
-      //               ],
-      //             ))),
-      //             Align(
-      //                 alignment: Alignment.bottomLeft,
-      //                 child: Text(
-      //                   'Username',
-      //                   style: TextStyle(color: Colors.white),
-      //                 )),
-      //           ],
-      //         ),
-      //         decoration: BoxDecoration(color: primaryBlack),
-      //       ),
-      //       const ListTile(
-      //         title: Text('Home'),
-      //       ),
-      //       ListTile(
-      //         title: Text('About'),
-      //       ),
-      //       ListTile(
-      //         title: Text('Content'),
-      //       ),
-      //       ListTile(
-      //         title: Text('Close'),
-      //         onTap: () {
-      //           Navigator.of(context).pop();
-      //         },
-      //       ),
-      //       ListTile(
-      //         title: Text('logout'),
-      //         onTap: () {
-      //           Navigator.of(context).pushReplacement(
-      //               MaterialPageRoute(builder: (context) => TypeScreen()));
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-
-      body: SingleChildScrollView(
-        child: Column(
+        key: _userKey,
+        appBar: AppBar(
+            elevation: 0,
+            backgroundColor: primaryBlack,
+            foregroundColor: Colors.white,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(camara,
+                        color: Colors.white, width: 50, height: 50)),
+              )
+            ],
+            leading: IconButton(
+                onPressed: () {
+                  _userKey.currentState?.openDrawer();
+                  // Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NavigationDrawerWidget()));
+                },
+                icon: SvgPicture.asset(menu, color: Colors.white))),
+        drawer: NavigationDrawerWidget(),
+        body: SingleChildScrollView(
+            child: Column(
           children: [
             HeaderWithSearchbox(),
-            ShopsTitleBar(size: size, title: 'Gocery Shop'),
-            ShopCardList(size: size),
-            ShopsTitleBar(size: size, title: 'Electronic shop'),
-            ShopCardList(size: size)
+            ShopsTitleBar(
+                size: size,
+                title: 'SuperMarket',
+                press: () {
+                  print('more pressed');
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ShopListScreen(
+                      shopList: superMarketList,
+                      shopName: 'SuperMarket',
+                    );
+                  }));
+                }),
+            ShopCardList(size: size, shopList: superMarketList),
+            ShopsTitleBar(
+              size: size,
+              title: 'Gocery Shop',
+              press: () =>
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ShopListScreen(
+                  shopList: groceryShopList,
+                  shopName: 'Grocery Shop',
+                );
+              })),
+            ),
+            ShopCardList(size: size, shopList: groceryShopList),
+            ShopsTitleBar(
+              size: size,
+              title: 'Electronic shop',
+              press: () =>
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ShopListScreen(
+                  shopList: electronicShopList,
+                  shopName: 'Electronic Shop',
+                );
+              })),
+            ),
+            ShopCardList(size: size, shopList: electronicShopList),
+            ShopsTitleBar(
+              size: size,
+              title: 'Book store',
+              press: () =>
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ShopListScreen(
+                  shopList: bookShopList,
+                  shopName: 'Book Store',
+                );
+              })),
+            ),
+            ShopCardList(size: size, shopList: bookShopList)
           ],
-        )
-        )
-    );
+        )));
   }
 }

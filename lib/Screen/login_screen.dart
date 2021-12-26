@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/signup_screen.dart';
 import 'package:where2buy/Widgets/button.dart';
-import 'package:where2buy/Widgets/circular_avatar.dart';
+import 'package:where2buy/Widgets/circular_avatar_with_border.dart';
 import 'package:where2buy/Widgets/divider.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 import 'package:where2buy/config.dart';
@@ -182,13 +182,13 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           GestureDetector(
                               onTap: () => print('google'),
-                              child: CircularAvatar(assetName: google)),
+                              child: CircularAvatarWithBorder(assetName: google)),
                           SizedBox(
                             width: 15,
                           ),
                           GestureDetector(
                               onTap: () => print('facebook'),
-                              child: CircularAvatar(assetName: facebook))
+                              child: CircularAvatarWithBorder(assetName: facebook))
                         ],
                       ))
 
