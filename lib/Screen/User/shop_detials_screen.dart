@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:where2buy/Components/app_bar.dart';
+import 'package:where2buy/Components/getType.dart';
+import 'package:where2buy/Components/product_list.dart';
 import 'package:where2buy/Widgets/circular_avatar_with_border.dart';
 import 'package:where2buy/Widgets/product_card.dart';
 
-import '../../config.dart';
+import '../../Components/config.dart';
 
 class ShopDetailsScreen extends StatelessWidget {
   final String shopType;
@@ -103,40 +105,27 @@ class ShopDetailsScreen extends StatelessWidget {
                       ],
                     )),
                 Container(
-                  child: Column(
-                    children:[
-                      Container(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ProductCard(size: size, storeName: 'Bag', storeImage: 'assets/images/products/bag.jpg', distance: '\$1200'),
-                            ProductCard(size: size, storeName: 'camara', storeImage: 'assets/images/products/camara.jpeg', distance:'\$8500'),
-                          ],
-                        )
-                      ),
-                      Container(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ProductCard(size: size, storeName: 'Cycle', storeImage: 'assets/images/products/cycle.jpg', distance: '\$1200'),
-                            ProductCard(size: size, storeName: 'Headphone', storeImage: 'assets/images/products/headphone.jpg', distance:'\$8500'),
-                          ],
-                        )
-                      ),
-                      Container(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ProductCard(size: size, storeName: 'Stool', storeImage: 'assets/images/products/stool.jpg', distance: '\$1200'),
-                            ProductCard(size: size, storeName: 'Shoe', storeImage: 'assets/images/products/Shoe.jpg', distance:'\$8500'),
-                          ],
-                        )
-                      )
-
-                    ]
-                  )
+                  height: size.height * 0.50,
+                  child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 30,
+                      children: getChildren(size: size,type:'store')),
                 )
               ]))),
     );
+  }
+
+  List<Widget> getChildren({required Size size, required String type}) {
+    final children = <Widget>[];
+    for (var i = 0; i < productList.length; i++) {
+      children.add(ProductCard(
+          type: type,
+          size: size,
+          storeName: productList[i]['productName'],
+          storeImage: productList[i]['productImage'],
+          distance: productList[i]['price']));
+    }
+    return children;
   }
 }

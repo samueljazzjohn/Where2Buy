@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:where2buy/Screen/User/shop_detials_screen.dart';
 import 'package:where2buy/Widgets/product_card.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class ShopCardList extends StatelessWidget {
   final Size size;

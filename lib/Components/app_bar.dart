@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:where2buy/Widgets/navigation_drawer_widget.dart';
 
-import '../config.dart';
+import 'config.dart';
 
 AppBar buildAppBar(BuildContext context) {
   return AppBar(

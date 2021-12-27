@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class HeaderWithSearchbox extends StatelessWidget {
   const HeaderWithSearchbox({Key? key}) : super(key: key);

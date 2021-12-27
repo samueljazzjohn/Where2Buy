@@ -5,7 +5,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/type_screen.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -35,8 +35,8 @@ class _SplashScreenState extends State<SplashScreen> {
             bool loggedIn = pref.getBool('LoggedIn') ?? false;
             return loggedIn
                 ? pref.getString('type') == 'user'
-                    ? const UserHomeScreen()
-                    : const StoreHomeScreen()
+                    ? const UserHomeScreen(type: 'user',)
+                    : const StoreHomeScreen(type: 'store',)
                 : const TypeScreen();
           },
           splashTransition: SplashTransition.fadeTransition,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:where2buy/Screen/login_screen.dart';
 import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/text_field.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class SignupScreen extends StatelessWidget {
   final String type;

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/signup_screen.dart';
 import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/circular_avatar_with_border.dart';
 import 'package:where2buy/Widgets/divider.dart';
 import 'package:where2buy/Widgets/text_field.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class LoginScreen extends StatelessWidget {
   final String type;
@@ -149,10 +150,10 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 15),
 
                       // Login Button
-                      const Button(
+                      Button(
                         isIcon: false,
                         btnText: 'Login',
-                        nextScreen: UserHomeScreen(),
+                        nextScreen: type=='user' ?  UserHomeScreen(type: type,) : StoreHomeScreen(type: type,),
                       ),
 
                       // Forgot Password
@@ -162,7 +163,8 @@ class LoginScreen extends StatelessWidget {
                                 return SignupScreen(type: type);
                               })),
                           child: const Text(
-                            'Don\'t have any account? sign up',
+                            'forget password?',
+                            textAlign:TextAlign.right,
                             style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black38,
@@ -190,8 +192,22 @@ class LoginScreen extends StatelessWidget {
                               onTap: () => print('facebook'),
                               child: CircularAvatarWithBorder(assetName: facebook))
                         ],
-                      ))
-
+                      )),
+                      SizedBox(height:10),
+                      TextButton(
+                          onPressed: () => Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return SignupScreen(type: type);
+                              })),
+                          child: const Text(
+                            'Don\'t have an account? Sign up',
+                            textAlign:TextAlign.right,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black38,
+                                decoration: TextDecoration.underline),
+                          )),
+                      
                       // : const SizedBox(),
                     ],
                   ),

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:where2buy/Components/app_bar.dart';
 import 'package:where2buy/Components/shop_list.dart';
-import 'package:where2buy/Screen/User/shop_card_list.dart';
+import 'package:where2buy/Screen/User/widget/shop_card_list.dart';
 import 'package:where2buy/Screen/User/shop_list_screen.dart';
-import 'package:where2buy/Screen/User/shops_titlebar.dart';
+import 'package:where2buy/Screen/User/widget/shops_titlebar.dart';
 import 'package:where2buy/Screen/type_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:where2buy/Widgets/header_with_searchbox.dart';
 import 'package:where2buy/Widgets/navigation_drawer_widget.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class UserHomeScreen extends StatefulWidget {
-  const UserHomeScreen({Key? key}) : super(key: key);
+  final String type;
+  const UserHomeScreen({Key? key,required this.type}) : super(key: key);
 
   @override
   State<UserHomeScreen> createState() => _UserHomeScreenState();

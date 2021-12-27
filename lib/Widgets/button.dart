@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class Button extends StatelessWidget {
   final bool isIcon;
@@ -22,8 +22,7 @@ class Button extends StatelessWidget {
             minimumSize: const Size(300, 50),
             primary: !isIcon ? Colors.black54 : Colors.white,
             onPrimary: !isIcon ? Colors.white : Colors.black54,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             side: BorderSide(width: 1, color: Colors.black54)),
         onPressed: () =>
             Navigator.push(context, MaterialPageRoute(builder: (context) {

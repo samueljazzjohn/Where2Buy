@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:where2buy/Screen/login_screen.dart';
 import 'package:where2buy/Screen/welcome_screen.dart';
 import 'package:where2buy/Widgets/type_card.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 ValueNotifier<bool> selectedNotifier = ValueNotifier(false);
 

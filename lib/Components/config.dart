@@ -25,3 +25,10 @@ String arrowRight = 'assets/icons/arrow-right-circle-fill.svg';
 String camara = 'assets/icons/camera-line.svg';
 String phone = 'assets/icons/phone-fill.svg';
 String map = 'assets/icons/map-pin-2-fill.svg';
+String more = 'assets/icons/more-2-fill.svg';
+String setLocation = 'assets/icons/focus-3-line.svg';
+
+
+//assetProfilePic
+
+String profile = 'assets/images/profile/sampic.jpg';

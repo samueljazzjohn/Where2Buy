@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:where2buy/config.dart';
+import 'package:where2buy/Components/config.dart';
 
 class ShopsTitleBar extends StatelessWidget {
   final Size size;
