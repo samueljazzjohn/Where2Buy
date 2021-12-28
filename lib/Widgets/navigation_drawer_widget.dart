@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:where2buy/Screen/Store/store_home_screen.dart';
+import 'package:where2buy/Screen/Store/store_profile_screen.dart';
+import 'package:where2buy/Screen/User/user_profile.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/type_screen.dart';
 import 'package:where2buy/Components/config.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
-  const NavigationDrawerWidget({Key? key}) : super(key: key);
+  final String type;
+  const NavigationDrawerWidget({Key? key,required this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,26 +64,36 @@ class NavigationDrawerWidget extends StatelessWidget {
             // buildMenuItem(itemName: 'logout', itemIcon: Icons.logout_outlined,
             //     press: () => selectedItem(context, 3)),
             ListTile(
-              title: Text('Home',style:TextStyle(color: Colors.white)),
-              leading:Icon(Icons.home,color:Colors.white)
+              title: Text('Home', style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.home, color: Colors.white),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => type=='user'? UserHomeScreen(
+                          type: 'store',
+                        ): StoreHomeScreen(type: type)));
+              },
             ),
-            SizedBox(height:15),
+            SizedBox(height: 15),
             ListTile(
-              title: Text('Profile',style:TextStyle(color: Colors.white)),
-              leading:Icon(Icons.person,color:Colors.white)
+              title: Text('Profile', style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.person, color: Colors.white),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => type=='user' ? UserProfile():StoreProfile()));
+              },
             ),
-            SizedBox(height:15),
+            SizedBox(height: 15),
             ListTile(
-              title: Text('Close',style:TextStyle(color: Colors.white)),
-              leading:Icon(Icons.close,color:Colors.white),
+              title: Text('Close', style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.close, color: Colors.white),
               onTap: () {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(height:15),
+            SizedBox(height: 15),
             ListTile(
-              title: Text('logout',style:TextStyle(color: Colors.white)),
-              leading:Icon(Icons.logout,color:Colors.white),
+              title: Text('logout', style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.logout, color: Colors.white),
               onTap: () {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => TypeScreen()));

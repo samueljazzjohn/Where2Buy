@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:where2buy/Components/config.dart';
 
 class CircularImage extends StatelessWidget {
-  const CircularImage({Key? key}) : super(key: key);
+  final bool isEditable;
+  const CircularImage({Key? key,this.isEditable=false }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class CircularImage extends StatelessWidget {
                   image: AssetImage('assets/images/profile/store.jpg'),
                   fit: BoxFit.cover)),
         ),
-        Positioned(
+        isEditable ? Positioned(
             bottom: 5,
             right: 5,
             child: Container(
@@ -40,7 +41,7 @@ class CircularImage extends StatelessWidget {
                 color: Colors.white,
                 size: 15,
               ),
-            ))
+            )) : SizedBox()
       ],
     );
   }

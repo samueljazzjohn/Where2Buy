@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:where2buy/Components/config.dart';
+import 'package:where2buy/Widgets/add_button.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 
@@ -46,7 +47,7 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () => print('image pressed'),
-                    child: CircularImage()
+                    child: CircularImage(isEditable: true,)
                   ),
                 ),
                 SizedBox(height: 35),
@@ -101,18 +102,7 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                   ),
                 ),
                 SizedBox(height:20),
-                Container(
-                    child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          maximumSize: const Size(400, 50),
-                          minimumSize: const Size(300, 50),
-                          primary: Colors.grey[300],
-                          onPrimary:primaryBlack,
-                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                        ),
-                        onPressed: () => print('button pressed'),
-                        icon: SvgPicture.asset(setLocation),
-                        label: Text('Set Location'))),
+                AddButton(btnText: 'Set Location', btnIcon: setLocation, press: ()=>print('btn pressed')),
                 SizedBox(
                   height: 20,
                 ),

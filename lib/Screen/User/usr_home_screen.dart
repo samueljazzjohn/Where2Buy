@@ -46,7 +46,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   // Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NavigationDrawerWidget()));
                 },
                 icon: SvgPicture.asset(menu, color: Colors.white))),
-        drawer: NavigationDrawerWidget(),
+        drawer: NavigationDrawerWidget(type: widget.type,),
         body: SingleChildScrollView(
             child: Column(
           children: [

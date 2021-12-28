@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:where2buy/Components/product_list.dart';
+import 'package:where2buy/Screen/Store/product_add_screen.dart';
+import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/header_with_searchbox.dart';
 import 'package:where2buy/Widgets/navigation_drawer_widget.dart';
 import 'package:where2buy/Widgets/product_card.dart';
@@ -55,12 +57,14 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                 // Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NavigationDrawerWidget()));
               },
               icon: SvgPicture.asset(menu, color: Colors.white))),
-      drawer: NavigationDrawerWidget(),
+      drawer: NavigationDrawerWidget(type: widget.type,),
       body: SingleChildScrollView(
         child: Column(
           children: [
             HeaderWithSearchbox(),
-            SizedBox(height: 40),
+            SizedBox(height: 30),
+            Button(isIcon: true, btnText: 'Add a product', nextScreen: AddProductScreen(type: widget.type),assetName: Icons.add_box_outlined),
+            SizedBox(height: 30),
             Container(
               height: size.height * 0.7,
               child: GridView.count(
