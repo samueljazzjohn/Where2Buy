@@ -13,9 +13,10 @@ const ShopSchema = new mongoose.Schema({
         coordinates: [Number],
         required:true
     },
-    products:[Buffer],
-    shopImg:Buffer
-})
+    products:[String],
+    shopImg:String
+},{collection:shops}
+)
 
 ShopSchema.index({ "loc": "2dsphere" });
 

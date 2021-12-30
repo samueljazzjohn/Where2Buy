@@ -5,7 +5,8 @@ const ProductSchema = new mongoose.Schema({
     pname:{type:String,required:true},
     qty:{type:Number,required:true},
     price:{type:Number,required:true},
-    Image:{type:Buffer,required:true},
-})
+    Image:{type:String,required:true},
+},{collection:'products'}
+)
 
-model.exports = mongoose.model('ProductSchema',ProductSchema)
+module.exports = mongoose.model('ProductSchema',ProductSchema)
