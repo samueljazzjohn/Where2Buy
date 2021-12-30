@@ -10,13 +10,3 @@ exports.imageFilter = (req,file,cb)=>{
     }
   }
 
-exports.storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,'uploads/')
-    },
-    filename:(req,file,cb)=>{
-        cb(null,'samuel'+'.jpg')
-    }
-  })
-
-

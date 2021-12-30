@@ -3,21 +3,26 @@ const mongoose = require('mongoose')
 
 
 const ShopSchema = new mongoose.Schema({
-    _usersId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserSchema'
     },
-    Phone: { type: String, required:true},
-    loc: {
-        type: { type: String },
-        coordinates: [Number],
-        required:true
+    phone: { type: String, required: true },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
     },
-    products:[String],
-    shopImg:String
-},{collection:shops}
+    shopImg: String
+}, { collection: 'shops' }
 )
 
-ShopSchema.index({ "loc": "2dsphere" });
+ShopSchema.index({ location : "2dsphere" });
 
-model.exports = mongoose.model( 'ShopSchema',ShopSchema )
+module.exports = mongoose.model('ShopSchema', ShopSchema)
