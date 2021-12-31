@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:where2buy/Components/config.dart';
+import 'package:where2buy/Widgets/bottom_sheet.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 
@@ -28,8 +29,8 @@ class UserEditProfile extends StatelessWidget {
                 SizedBox(height: 25),
                 Center(
                   child: GestureDetector(
-                    onTap: () => print('image pressed'),
-                    child: CircularImage()
+                    onTap: () => showModalBottomSheet(context: context, builder: (context)=>BuildBottomSheet()),
+                    child: CircularImage(isEditable: true,)
                   ),
                 ),
                 SizedBox(height: 35),
@@ -46,6 +47,7 @@ class UserEditProfile extends StatelessWidget {
                   height: 50,
                 ),
                 Container(
+                  margin:EdgeInsets.only(bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

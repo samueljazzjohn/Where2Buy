@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:where2buy/Components/config.dart';
 import 'package:where2buy/Screen/Store/store_edit_profile_screen.dart';
+import 'package:where2buy/Screen/User/user_edit_profile.dart';
 import 'package:where2buy/Screen/type_screen.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
 
@@ -46,7 +47,7 @@ class UserProfile extends StatelessWidget {
                 name: 'Edit Profile',
                 iconName: Icons.edit,
                 isLeading: false,
-                nextScreen: StoreEditProfileScreen()),
+                nextScreen: UserEditProfile()),
             buildListTile(
                 ctx: context,
                 name: 'Logout',

@@ -31,7 +31,7 @@ class Button extends StatelessWidget {
             side: BorderSide(width: 1, color: Colors.black54)),
         onPressed: () {
           isNext
-              ? Navigator.push(context, MaterialPageRoute(builder: (context) {
+              ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                   return nextScreen!;
                 }))
               : onClick;

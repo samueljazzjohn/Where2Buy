@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:where2buy/Components/config.dart';
 import 'package:where2buy/Widgets/add_button.dart';
+import 'package:where2buy/Widgets/bottom_sheet.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 
@@ -31,6 +33,8 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
       'others'
     ];
 
+    // final ImagePicker _picker = ImagePicker();
+
     return Scaffold(
         appBar: AppBar(backgroundColor: primaryBlack, elevation: 0),
         body: SingleChildScrollView(
@@ -45,10 +49,13 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                 ),
                 SizedBox(height: 25),
                 Center(
-                  child: GestureDetector(
-                    onTap: () => print('image pressed'),
-                    child: CircularImage(isEditable: true,)
-                  ),
+                      child: GestureDetector(
+                          onTap: () => showModalBottomSheet(
+                              context: context,
+                              builder: (context) => BuildBottomSheet()),
+                          child: CircularImage(
+                            isEditable: true
+                          )),
                 ),
                 SizedBox(height: 35),
                 InputField(controller: _storeName, hintText: 'Enter StoreName'),
@@ -101,8 +108,11 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height:20),
-                AddButton(btnText: 'Set Location', btnIcon: setLocation, press: ()=>print('btn pressed')),
+                SizedBox(height: 20),
+                AddButton(
+                    btnText: 'Set Location',
+                    btnIcon: setLocation,
+                    press: () => print('btn pressed')),
                 SizedBox(
                   height: 20,
                 ),
@@ -139,7 +149,7 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height:20)
+                SizedBox(height: 20)
               ],
             ),
           ),
