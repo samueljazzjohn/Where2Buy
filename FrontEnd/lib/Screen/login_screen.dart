@@ -8,15 +8,23 @@ import 'package:where2buy/Widgets/divider.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 import 'package:where2buy/Components/config.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final String type;
   const LoginScreen({Key? key, required this.type}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     TextEditingController _userController = TextEditingController();
     TextEditingController _pasController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -43,8 +51,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                Image.asset(login,
-                    width: 160, height: 100, fit: BoxFit.contain
+                Image.asset(login, width: 160, height: 100, fit: BoxFit.contain
                     // color: Colors.redAccent,
                     ),
               ],
@@ -54,43 +61,19 @@ class LoginScreen extends StatelessWidget {
             Expanded(
               // flex: 5,
               child: Form(
+                key: _formKey,
                 child: Container(
-                  padding: const EdgeInsets.only(top:20,right:20,left:20,bottom:0),
+                  padding: const EdgeInsets.only(
+                      top: 20, right: 20, left: 20, bottom: 0),
                   child: Column(
                     children: [
                       // Email Field
                       InputField(
                           controller: _userController,
                           textfieldIcon: Icons.mail_outline,
-                          hintText: "Enter Email"),
-                      // Container(
-                      //   width: 300,
-                      //   height: 50,
-                      //   child: TextFormField(
-                      //     cursorColor: Colors.black54,
-                      //     textAlign: TextAlign.justify,
-                      //     decoration: InputDecoration(
-                      //         prefixIcon: const Padding(
-                      //           padding: const EdgeInsets.only(left: 8.0),
-                      //           child: Icon(Icons.mail_outline,
-                      //               color: Colors.black54),
-                      //         ),
-                      //         border: OutlineInputBorder(
-                      //           borderSide:
-                      //               BorderSide(color: Colors.black87, width: 1),
-                      //           borderRadius: BorderRadius.circular(15),
-                      //         ),
-                      //         hintText: 'Enter Email',
-                      //         focusedBorder: OutlineInputBorder(
-                      //             borderSide: BorderSide(
-                      //                 color: Colors.black87, width: 1),
-                      //             borderRadius: BorderRadius.circular(15))),
-                      //     onChanged: (value) => setState(() {
-                      //       username = value;
-                      //       print(username);
-                      //     }),
-                      //   ),
-                      // ),
+                          hintText: "Enter Email",
+                          labelText:"Email"
+                          ),
 
                       const SizedBox(height: 15),
 
@@ -100,78 +83,48 @@ class LoginScreen extends StatelessWidget {
                         hintText: "Enter Password",
                         textfieldIcon: Icons.lock_outline,
                         isPass: true,
+                        labelText:'Password'
                       ),
-
-                      // Container(
-                      //   width: 300,
-                      //   height: 50,
-                      //   child: TextFormField(
-                      //     obscureText: _isObscure,
-                      //     cursorColor: Colors.black54,
-                      //     textAlign: TextAlign.justify,
-                      //     decoration: InputDecoration(
-                      //         prefixIcon: const Padding(
-                      //           padding: EdgeInsets.only(left: 8.0),
-                      //           child: Icon(Icons.lock_outline,
-                      //               color: Colors.black54),
-                      //         ),
-                      //         border: OutlineInputBorder(
-                      //           borderSide: const BorderSide(
-                      //               color: Colors.black87, width: 1),
-                      //           borderRadius: BorderRadius.circular(15),
-                      //         ),
-                      //         suffixIcon: IconButton(
-                      //           icon: Icon(
-                      //             _isObscure
-                      //                 ? Icons.visibility
-                      //                 : Icons.visibility_off,
-                      //             color: Colors.black54,
-                      //           ),
-                      //           onPressed: () {
-                      //             setState(() {
-                      //               _isObscure = !_isObscure;
-                      //               print(_isObscure);
-                      //             });
-                      //           },
-                      //         ),
-                      //         hintText: 'Enter Password',
-                      //         focusedBorder: OutlineInputBorder(
-                      //             borderSide: BorderSide(
-                      //                 color: Colors.black87, width: 1),
-                      //             borderRadius: BorderRadius.circular(15))),
-                      //     onChanged: (value) => setState(() {
-                      //       password = value;
-                      //     }),
-                      //   ),
-                      // ),
 
                       const SizedBox(height: 15),
 
                       // Login Button
-                      Button(
-                        isIcon: false,
-                        btnText: 'Login',
-                        nextScreen: type=='user' ?  UserHomeScreen(type: type,) : StoreHomeScreen(type: type,),
-                      ),
-
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              maximumSize: const Size(400, 50),
+                              minimumSize: const Size(300, 50),
+                              primary: Colors.black54,
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              side:
+                                  BorderSide(width: 1, color: Colors.black54)),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return widget.type == 'user'
+                                    ? UserHomeScreen(type: widget.type)
+                                    : StoreHomeScreen(type: widget.type);
+                              }));
+                            }
+                          },
+                          child: Text('Login')),
                       // Forgot Password
                       TextButton(
                           onPressed: () => Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return SignupScreen(type: type);
+                                return SignupScreen(type: widget.type);
                               })),
                           child: const Text(
                             'forget password?',
-                            textAlign:TextAlign.right,
+                            textAlign: TextAlign.right,
                             style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black38,
                                 decoration: TextDecoration.underline),
                           )),
-                      // type=='user'?
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
+
                       ColumnDiveder(),
 
                       const SizedBox(height: 15),
@@ -182,49 +135,36 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           GestureDetector(
                               onTap: () => print('google'),
-                              child: CircularAvatarWithBorder(assetName: google)),
+                              child:
+                                  CircularAvatarWithBorder(assetName: google)),
                           SizedBox(
                             width: 15,
                           ),
                           GestureDetector(
                               onTap: () => print('facebook'),
-                              child: CircularAvatarWithBorder(assetName: facebook))
+                              child:
+                                  CircularAvatarWithBorder(assetName: facebook))
                         ],
                       )),
-                      SizedBox(height:2),
+                      SizedBox(height: 2),
                       TextButton(
                           onPressed: () => Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return SignupScreen(type: type);
+                                return SignupScreen(type: widget.type);
                               })),
                           child: const Text(
                             'Don\'t have an account? Sign up',
-                            textAlign:TextAlign.right,
+                            textAlign: TextAlign.right,
                             style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black38,
                                 decoration: TextDecoration.underline),
                           )),
-                      
-                      // : const SizedBox(),
                     ],
                   ),
                 ),
               ),
             ),
-            // Container(
-            //   width: 25,
-            //     child: Align(
-            //       alignment:Alignment.bottomLeft,
-            //       child: IconButton(
-            //         onPressed:()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-            //           return TypeScreen();
-            //         }
-            //         ) ),
-            //          icon: Icon(Icons.arrow_left_rounded),
-            //          ),
-            //     ),
-            // )
           ],
         ),
       )),

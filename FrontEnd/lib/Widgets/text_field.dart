@@ -3,10 +3,10 @@ import 'package:where2buy/Components/config.dart';
 
 ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
 
-class InputField extends StatelessWidget {
+class InputField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
-  // final String? labelText;
+  final String? labelText;
   final bool isPass;
   final IconData? textfieldIcon;
   const InputField(
@@ -14,22 +14,36 @@ class InputField extends StatelessWidget {
       required this.controller,
       required this.hintText,
       this.textfieldIcon,
-      // this.labelText,
+      this.labelText,
       this.isPass = false})
       : super(key: key);
 
   @override
+  State<InputField> createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<InputField> {
+  @override
   Widget build(BuildContext context) {
-    _isObscure.value = isPass;
+    _isObscure.value = widget.isPass;
 
     return Container(
       width: 300,
-      height: 50,
+      height: 80,
       child: ValueListenableBuilder(
         valueListenable: _isObscure,
         builder: (BuildContext context, bool value, Widget? child) {
           return TextFormField(
-            controller: controller,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                String? text = widget.labelText;
+                return '$text shouldn\'t be empty';
+              }
+              if (widget.isPass && value.length < 8) {
+                return 'password must contain atleast 8 characters';
+              }
+            },
+            controller: widget.controller,
             cursorColor: Colors.black54,
             obscureText: _isObscure.value,
             textAlign: TextAlign.center,
@@ -37,11 +51,11 @@ class InputField extends StatelessWidget {
                 // labelText: labelText ?? '',
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: textfieldIcon != null
-                      ? Icon(textfieldIcon, color: Colors.black54)
+                  child: widget.textfieldIcon != null
+                      ? Icon(widget.textfieldIcon, color: Colors.black54)
                       : SizedBox(),
                 ),
-                suffixIcon: isPass
+                suffixIcon: widget.isPass
                     ? Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: IconButton(
@@ -60,7 +74,7 @@ class InputField extends StatelessWidget {
                   borderSide: BorderSide(color: primaryBlack, width: 1),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                labelText: hintText,
+                labelText: widget.hintText,
                 labelStyle: TextStyle(color: primaryBlack),
                 focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black87, width: 1),

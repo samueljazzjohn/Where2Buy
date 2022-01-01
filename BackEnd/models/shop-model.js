@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const ShopSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserSchema'
+        ref: 'UserModel'
     },
     phone: { type: String, required: true },
     location: {
@@ -25,4 +25,4 @@ const ShopSchema = new mongoose.Schema({
 
 ShopSchema.index({ location : "2dsphere" });
 
-module.exports = mongoose.model('ShopSchema', ShopSchema)
+module.exports = mongoose.model('ShopModel', ShopSchema)

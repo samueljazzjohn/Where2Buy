@@ -30,8 +30,10 @@ class Button extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             side: BorderSide(width: 1, color: Colors.black54)),
         onPressed: () {
+          
           isNext
-              ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+              ? Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
                   return nextScreen!;
                 }))
               : onClick;
@@ -39,4 +41,10 @@ class Button extends StatelessWidget {
         icon: isIcon && assetName != null ? Icon(assetName!) : SizedBox(),
         label: Text(btnText));
   }
+
+  // void navFunction(BuildContext context, Widget nextScreen) {
+  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+  //     return nextScreen;
+  //   }));
+  // }
 }

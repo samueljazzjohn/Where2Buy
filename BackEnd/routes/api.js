@@ -9,6 +9,11 @@ const uploadHelper = require('../Helpers/upload-helper');
 const userHelper = require('../Helpers/user-helper')
 const productHelper = require('../Helpers/product-helper')
 const { request } = require('http');
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+const middleware = require('../middleware')
+
+dotenv.config()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -32,6 +37,26 @@ const upload = multer({
 router.get('/', function (req, res, next) {
   res.send('Hello Express');
 });
+
+
+router.post('/login',middleware.athenticateToken,(req,res,next)=>{
+  UserModel.findOne({username:req.body.username},(err,doc)=>{
+    if (err) return res.status(500).json({msg:err});
+    if(doc==null){
+      return res.status(403).json('username Incorrect');
+    }
+    if(doc.password==req.body.password){
+      let token = jwt.sign({username:req.body.username},process.env.JWT_SECRET_KEY,{
+        expiresIn:"24h"
+      });
+      return res.json({
+        token:token,
+        msg:"Success"
+      })
+    }
+    
+  })
+})
 
 
 //  Adding the users details
@@ -75,6 +100,8 @@ router.post('/addProduct', async function (req, res, next) {
   });
 });
 
+
+
 // Adding shop details
 router.post('/updateshopdetails', async function (req, res, next) {
   await userHelper.getUserId(req.body.mail).then((userId) => {
@@ -99,6 +126,8 @@ router.post('/updateshopdetails', async function (req, res, next) {
     });
   });
 });
+
+
 
 //  Getting shop details
 router.get('/shopdetails', async (req, res, next) => {

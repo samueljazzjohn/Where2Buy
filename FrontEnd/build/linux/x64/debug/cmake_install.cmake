@@ -1,8 +1,8 @@
-# Install script for directory: /home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/linux
+# Install script for directory: /home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/linux
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle")
+  set(CMAKE_INSTALL_PREFIX "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,83 +39,83 @@ endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   
-  file(REMOVE_RECURSE "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/")
+  file(REMOVE_RECURSE "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/")
   
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(EXISTS "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
+  if(EXISTS "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
     file(RPATH_CHECK
-         FILE "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy"
+         FILE "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy"
          RPATH "$ORIGIN/lib")
   endif()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
+   "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle" TYPE EXECUTABLE FILES "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/intermediates_do_not_run/where2buy")
-  if(EXISTS "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
+file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle" TYPE EXECUTABLE FILES "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/intermediates_do_not_run/where2buy")
+  if(EXISTS "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
     file(RPATH_CHANGE
-         FILE "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy"
-         OLD_RPATH "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/linux/flutter/ephemeral:"
+         FILE "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy"
+         OLD_RPATH "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/linux/flutter/ephemeral:"
          NEW_RPATH "$ORIGIN/lib")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/snap/flutter/current/usr/bin/strip" "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
+      execute_process(COMMAND "/snap/flutter/current/usr/bin/strip" "$ENV{DESTDIR}/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/where2buy")
     endif()
   endif()
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/data/icudtl.dat")
+   "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/data/icudtl.dat")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/data" TYPE FILE FILES "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/linux/flutter/ephemeral/icudtl.dat")
+file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/data" TYPE FILE FILES "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/linux/flutter/ephemeral/icudtl.dat")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so")
+   "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/lib" TYPE FILE FILES "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/linux/flutter/ephemeral/libflutter_linux_gtk.so")
+file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/lib" TYPE FILE FILES "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/linux/flutter/ephemeral/libflutter_linux_gtk.so")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   
-  file(REMOVE_RECURSE "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/data/flutter_assets")
+  file(REMOVE_RECURSE "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/data/flutter_assets")
   
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/data/flutter_assets")
+   "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/data/flutter_assets")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/bundle/data" TYPE DIRECTORY FILES "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build//flutter_assets")
+file(INSTALL DESTINATION "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/bundle/data" TYPE DIRECTORY FILES "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build//flutter_assets")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/flutter/cmake_install.cmake")
+  include("/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/flutter/cmake_install.cmake")
 
 endif()
 
@@ -127,5 +127,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/samueljazzjohn/Programmes/Flutter/Projects/where2buy/FrontEnd/build/linux/x64/debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/samueljazzjohn/Programmes/Project/where2buy/FrontEnd/build/linux/x64/debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
