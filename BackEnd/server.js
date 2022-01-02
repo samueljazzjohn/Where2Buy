@@ -7,8 +7,9 @@ var connectDB =require('./config/dbconnection')
 
 connectDB
 
-var apiRouter = require('./routes/api');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes');
+var shopRouter = require('./routes/shop');
+var customerRouter=require('./routes/customer')
 
 var app = express();
 
@@ -19,8 +20,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', apiRouter);
-app.use('/users', usersRouter);
+app.use('/', indexRouter);
+app.use('/customer', customerRouter)
+app.use('/shop',shopRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
