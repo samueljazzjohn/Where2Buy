@@ -2,9 +2,8 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class NetworkHandler {
-  String baseUrl = 'http://10.0.2.2:3000';
+  String baseUrl = 'https://where2buy-2022.herokuapp.com/';
   var log = Logger();
-
 
   Future<dynamic> getReq(String url) async {
     url = formatter(url);
