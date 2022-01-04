@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Screen/login_screen.dart';
 import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/text_field.dart';
@@ -13,14 +14,14 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  static final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final _textController = TextEditingController();
     final _paswController = TextEditingController();
     final _mailController = TextEditingController();
-    final _confirmPassController = TextEditingController();
     final _typeController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -91,8 +92,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                       borderRadius: BorderRadius.circular(15)),
                                   side: BorderSide(
                                       width: 1, color: Colors.black54)),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
+                                  Map<String, String> data = {
+                                    "username": _textController.text,
+                                    "password": _paswController.text,
+                                    "mail": _mailController.text,
+                                    "type":widget.type
+                                  };
+                                  print(data);
+                                  NetworkHandler net = new NetworkHandler();
+                                  await net.postReq(
+                                      "/signup", data);
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
                                     return LoginScreen(type: widget.type);

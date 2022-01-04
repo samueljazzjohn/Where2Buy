@@ -45,7 +45,7 @@ class _InputFieldState extends State<InputField> {
             },
             controller: widget.controller,
             cursorColor: Colors.black54,
-            obscureText: _isObscure.value,
+            obscureText: widget.isPass ? _isObscure.value : false,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
                 // labelText: labelText ?? '',
