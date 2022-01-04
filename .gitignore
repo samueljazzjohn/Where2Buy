@@ -23,13 +23,13 @@
 # Flutter/Dart/Pub related
 **/FrontEnd//doc/api/
 **/FrontEnd//ios/Flutter/.last_build_id
-/FrontEnd/.dart_tool/
-/FrontEnd/.flutter-plugins
-/FrontEnd/.flutter-plugins-dependencies
-/FrontEnd/.packages
-/FrontEnd/.pub-cache/
-/FrontEnd/.pub/
-/FrontEnd/build/
+FrontEnd/.dart_tool/
+FrontEnd/.flutter-plugins
+FrontEnd/.flutter-plugins-dependencies
+FrontEnd/.packages
+FrontEnd/.pub-cache/
+FrontEnd/.pub/
+FrontEnd/build/
 
 # Web related
 /FrontEnd/lib/generated_plugin_registrant.dart
@@ -41,9 +41,11 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/FrontEnd//android/app/debug
-/FrontEnd//android/app/profile
-/FrontEnd//android/app/release
+FrontEnd//android/app/debug
+FrontEnd//android/app/profile
+FrontEnd//android/app/release
 
-#nodeModules
-/BackEnd/node_modules
+FrontEnd/build/
+
+#node modules
+BackEnd/node_modules/
