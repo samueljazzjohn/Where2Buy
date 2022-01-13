@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-var url = 'mongodb+srv://jazzjohn:Jazz2%401999@where2buy.qgezx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+
+var url = process.env.MONGO_URI
 
 mongoose.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true },(err,db)=>{
     if(err) throw err;
