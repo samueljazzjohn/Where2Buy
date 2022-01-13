@@ -48,4 +48,6 @@ FrontEnd//android/app/release
 FrontEnd/build/
 
 #node modules
+
 BackEnd/node_modules/
+BackEnd/.env
