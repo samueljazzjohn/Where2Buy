@@ -38,12 +38,15 @@ const upload = multer({
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.send('Hello Express');
+  // res.send('Hello Express');
+  res.json({
+    "msg":"success"
+  })
 });
 
 
 router.post('/login',(req,res,next)=>{
-  UserModel.findOne({username:req.body.username},(err,doc)=>{
+  UserModel.findOne({email:req.body.email},(err,doc)=>{
     if (err) return res.status(500).json({"msg":err});
     if(doc==null){
       return res.status(403).json('username Incorrect');
@@ -71,7 +74,7 @@ router.post('/signup', async function (req, res, next) {
     res.status(200).json({ "msg": "Success" })
   }).catch((err) => {
     console.log('Error occured' + err)
-    res.status(403).json({ "msg": "error" })
+    res.status(403).json({ "msg": err })
   })
 });
 
