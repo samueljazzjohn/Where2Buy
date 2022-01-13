@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:where2buy/Components/config.dart';
 
-ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
-
 class InputField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final String? labelText;
   final bool isPass;
+  final bool isMail;
   final IconData? textfieldIcon;
   const InputField(
       {Key? key,
@@ -15,6 +14,7 @@ class InputField extends StatefulWidget {
       required this.hintText,
       this.textfieldIcon,
       this.labelText,
+      this.isMail = false,
       this.isPass = false})
       : super(key: key);
 
@@ -23,65 +23,71 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
+  bool? _isObscure;
+
+  @override
+  void initState() {
+    _isObscure = true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    _isObscure.value = widget.isPass;
-
     return Container(
-      width: 300,
-      height: 80,
-      child: ValueListenableBuilder(
-        valueListenable: _isObscure,
-        builder: (BuildContext context, bool value, Widget? child) {
-          return TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                String? text = widget.labelText;
-                return '$text shouldn\'t be empty';
-              }
-              if (widget.isPass && value.length < 8) {
-                return 'password must contain atleast 8 characters';
-              }
-            },
-            controller: widget.controller,
-            cursorColor: Colors.black54,
-            obscureText: widget.isPass ? _isObscure.value : false,
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-                // labelText: labelText ?? '',
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: widget.textfieldIcon != null
-                      ? Icon(widget.textfieldIcon, color: Colors.black54)
-                      : SizedBox(),
-                ),
-                suffixIcon: widget.isPass
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: IconButton(
-                            onPressed: () {
-                              _isObscure.value = !_isObscure.value;
-                            },
-                            icon: Icon(
-                              _isObscure.value
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.black54,
-                            )),
-                      )
+        width: 300,
+        height: 80,
+        child: TextFormField(
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              String? text = widget.labelText;
+              return '$text shouldn\'t be empty';
+            }
+            if (widget.isPass && value.length < 8) {
+              return 'password must contain atleast 8 characters';
+            }
+            // if (widget.isMail &&
+            //     RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            //         .hasMatch(value)) {
+            //   return 'Enter a valid email';
+            // }
+          },
+          controller: widget.controller,
+          cursorColor: Colors.black54,
+          obscureText: widget.isPass ? _isObscure! : false,
+          textAlign: TextAlign.center,
+          decoration: InputDecoration(
+              // labelText: labelText ?? '',
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: widget.textfieldIcon != null
+                    ? Icon(widget.textfieldIcon, color: Colors.black54)
                     : SizedBox(),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: primaryBlack, width: 1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                labelText: widget.hintText,
-                labelStyle: TextStyle(color: primaryBlack),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black87, width: 1),
-                    borderRadius: BorderRadius.circular(15))),
-          );
-        },
-      ),
-    );
+              ),
+              suffixIcon: widget.isPass
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure!;
+                            });
+                          },
+                          icon: Icon(
+                            _isObscure!
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.black54,
+                          )),
+                    )
+                  : SizedBox(),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: primaryBlack, width: 1),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              labelText: widget.hintText,
+              labelStyle: TextStyle(color: primaryBlack),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black87, width: 1),
+                  borderRadius: BorderRadius.circular(15))),
+        ));
   }
 }

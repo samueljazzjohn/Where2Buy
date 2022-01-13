@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/signup_screen.dart';
-import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/circular_avatar_with_border.dart';
 import 'package:where2buy/Widgets/divider.dart';
 import 'package:where2buy/Widgets/text_field.dart';
@@ -17,14 +17,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  GlobalKey<FormState>? loginFormKey;
+    final TextEditingController _userController = TextEditingController();
+    final TextEditingController _pasController = TextEditingController();
+    NetworkHandler net = NetworkHandler();
 
+
+  @override
+  void initState() {
+    loginFormKey = GlobalKey<FormState>();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    TextEditingController _userController = TextEditingController();
-    TextEditingController _pasController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -61,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Expanded(
               // flex: 5,
               child: Form(
-                key: _formKey,
+                key: loginFormKey,
                 child: Container(
                   padding: const EdgeInsets.only(
                       top: 20, right: 20, left: 20, bottom: 0),
@@ -70,17 +76,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Email Field
                       InputField(
                           controller: _userController,
-                          textfieldIcon: Icons.mail_outline,
                           hintText: "Enter Email",
-                          labelText: "Email"),
+                          textfieldIcon: Icons.mail_outline,
+                          isMail: true,
+                          labelText: 'email'),
 
+                      SizedBox(height: 2),
                       // Password Field
                       InputField(
-                          controller: _pasController,
-                          hintText: "Enter Password",
-                          textfieldIcon: Icons.lock_outline,
-                          isPass: true,
-                          labelText: 'Password'),
+                        controller: _pasController,
+                        hintText: "Enter Password",
+                        textfieldIcon: Icons.lock_outline,
+                        labelText: 'Password',
+                        isPass: true,
+                      ),
 
                       // const SizedBox(height: 15),
 
@@ -96,28 +105,39 @@ class _LoginScreenState extends State<LoginScreen> {
                               side:
                                   BorderSide(width: 1, color: Colors.black54)),
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return widget.type == 'user'
-                                    ? UserHomeScreen(type: widget.type)
-                                    : StoreHomeScreen(type: widget.type);
-                              }));
+                            if (loginFormKey!.currentState!.validate()) {
+                              Map<String, dynamic> data = {
+                                'email': _userController.text,
+                                'password': _pasController.text
+                              };
+                              net.postReq("/login", data).then((res) {
+                                res.statusCode == 200 || res.statusCode == 201
+                                    ? Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) {
+                                        return widget.type == 'user'
+                                            ? UserHomeScreen(type: widget.type)
+                                            : StoreHomeScreen(
+                                                type: widget.type);
+                                      }))
+                                    : print('error occured');
+                              });
                             }
                           },
                           child: Text('Login')),
-                          SizedBox(height:3),
+                      SizedBox(height: 3),
 
                       Container(
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Row(
                             children: [
-                               // Forgot Password
+                              // Forgot Password
                               TextButton(
-                                  onPressed: () => Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return SignupScreen(type: widget.type);
-                                      })),
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return SignupScreen(type: widget.type);
+                                    }));
+                                  },
                                   child: const Text(
                                     'forget password?',
                                     textAlign: TextAlign.right,
@@ -128,23 +148,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                   )),
                               Spacer(),
                               TextButton(
-                                  onPressed: () => Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return SignupScreen(type: widget.type);
-                                      })),
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return SignupScreen(type: widget.type);
+                                    }));
+                                  },
                                   child: const Text(
                                     'Sign up',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black38,
-                                        ),
+                                      fontSize: 12,
+                                      color: Colors.black38,
+                                    ),
                                   )),
                             ],
                           )),
-
-                     
-
 
                       ColumnDiveder(),
 
@@ -154,14 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
+                          InkWell(
                               onTap: () => print('google'),
                               child:
                                   CircularAvatarWithBorder(assetName: google)),
                           SizedBox(
                             width: 15,
                           ),
-                          GestureDetector(
+                          InkWell(
                               onTap: () => print('facebook'),
                               child:
                                   CircularAvatarWithBorder(assetName: facebook))

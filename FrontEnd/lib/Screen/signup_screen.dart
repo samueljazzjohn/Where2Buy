@@ -15,14 +15,14 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   static final _formKey = GlobalKey<FormState>();
+  final TextEditingController _textController = TextEditingController();
+  final TextEditingController _paswController = TextEditingController();
+  final TextEditingController _mailController = TextEditingController();
+  NetworkHandler net = NetworkHandler();
 
   @override
   Widget build(BuildContext context) {
-    final _textController = TextEditingController();
-    final _paswController = TextEditingController();
-    final _mailController = TextEditingController();
-    final _typeController = TextEditingController();
-
+    
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -72,6 +72,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               controller: _mailController,
                               hintText: "Enter Email",
                               textfieldIcon: Icons.mail_outline,
+                              isMail: true,
                               labelText: 'email'),
                           SizedBox(height: 20),
                           InputField(
@@ -92,22 +93,24 @@ class _SignupScreenState extends State<SignupScreen> {
                                       borderRadius: BorderRadius.circular(15)),
                                   side: BorderSide(
                                       width: 1, color: Colors.black54)),
-                              onPressed: () async {
+                              onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  Map<String, String> data = {
-                                    "username": _textController.text,
-                                    "password": _paswController.text,
-                                    "mail": _mailController.text,
-                                    "type":widget.type
+                                  Map<String, dynamic> data = {
+                                    'username': _textController.text,
+                                    'password': _paswController.text,
+                                    'email': _mailController.text,
+                                    'type': widget.type
                                   };
                                   print(data);
-                                  NetworkHandler net = new NetworkHandler();
-                                  await net.postReq(
-                                      "/signup", data);
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return LoginScreen(type: widget.type);
-                                  }));
+                                  net.postReq("/signup",data).then((res) {
+                                    print("Signup res $res");
+                                    res.statusCode == 200 || res.statusCode == 201
+                                      ? Navigator.pushReplacement(context,
+                                          MaterialPageRoute(builder: (context) {
+                                          return LoginScreen(type: widget.type);
+                                        }))
+                                      : print('error');
+                                  });
                                 }
                               },
                               child: Text('Signup')),

@@ -1,26 +1,27 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class NetworkHandler {
-  String baseUrl = 'https://where2buy-2022.herokuapp.com/';
+  String baseUrl = 'https://where2buy-2022.herokuapp.com';
+  // String baseUrl = 'http://127.0.0.1:55981';
   var log = Logger();
 
-  Future<dynamic> getReq(String url) async {
+  Future<http.Response> getReq(String url) async {
     url = formatter(url);
     var response = await http.get(Uri.parse(url));
+    print("response:${response.statusCode}");
     log.i(response.body);
-    log.i(response.statusCode);
+    return response;
   }
 
-  Future<dynamic> postReq(String url, Map<String, String> body) async {
+  Future<http.Response> postReq(String url, Map<String, dynamic> body) async {
     url = formatter(url);
     var response = await http.post(Uri.parse(url), body: body);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      log.i(response.body);
-      return response;
-    }
+    print("response:${response.statusCode}");
     log.i(response.body);
-    log.i(response.statusCode);
+    return response;
   }
 
   String formatter(String url) {
