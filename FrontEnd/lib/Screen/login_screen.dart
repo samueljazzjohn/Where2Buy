@@ -1,10 +1,13 @@
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/signup_screen.dart';
 import 'package:where2buy/Widgets/circular_avatar_with_border.dart';
 import 'package:where2buy/Widgets/divider.dart';
+import 'package:where2buy/Widgets/flash.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 import 'package:where2buy/Components/config.dart';
 
@@ -18,10 +21,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState>? loginFormKey;
-    final TextEditingController _userController = TextEditingController();
-    final TextEditingController _pasController = TextEditingController();
-    NetworkHandler net = NetworkHandler();
-
+  bool isLoading = false;
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _pasController = TextEditingController();
+  NetworkHandler net = NetworkHandler();
 
   @override
   void initState() {
@@ -105,6 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               side:
                                   BorderSide(width: 1, color: Colors.black54)),
                           onPressed: () {
+                            setState(() {
+                              isLoading = true;
+                            });
                             if (loginFormKey!.currentState!.validate()) {
                               Map<String, dynamic> data = {
                                 'email': _userController.text,
@@ -112,18 +118,21 @@ class _LoginScreenState extends State<LoginScreen> {
                               };
                               net.postReq("/login", data).then((res) {
                                 res.statusCode == 200 || res.statusCode == 201
-                                    ? Navigator.pushReplacement(context,
-                                        MaterialPageRoute(builder: (context) {
-                                        return widget.type == 'user'
-                                            ? UserHomeScreen(type: widget.type)
-                                            : StoreHomeScreen(
-                                                type: widget.type);
-                                      }))
-                                    : print('error occured');
+                                    ? LoginNavigate(widget.type, res)
+                                    : buildFlash(context,
+                                        "Username or password incorrect");
+                              }).catchError(
+                                  (err) => {buildFlash(context, err)});
+                              setState(() {
+                                isLoading = false;
                               });
                             }
                           },
-                          child: Text('Login')),
+                          child: isLoading
+                              ? CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text('Login')),
                       SizedBox(height: 3),
 
                       Container(
@@ -196,5 +205,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       )),
     );
+  }
+
+  LoginNavigate(String type, var res) {
+    storeValue(type, res);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return widget.type == 'user'
+          ? UserHomeScreen(type: widget.type)
+          : StoreHomeScreen(type: widget.type);
+    }));
+  }
+
+  Future<void> storeValue(String type, var res) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("type", type);
+    pref.setString("token", res.token);
+    pref.setString("username", res.mail);
+    pref.setString("mail", res.mail);
   }
 }
