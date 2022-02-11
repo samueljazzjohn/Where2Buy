@@ -26,36 +26,44 @@ const Login = () => {
         console.log(username)
         console.log(password)
         console.log(data)
-        axios.post("", data).then(res => {
-        console.log(res.status)
-        console.log(res)
-        if(res.status===200){
+        if(data.username=='admin'&&data.password=='admin123'){
+            return <Layout />;
+        }else{
             Swal.fire({
-                icon: 'success',
-                title: res.data,
-              })
-              return <Layout/>;
+                icon:'error',
+                title:'Username or password incorrect'
+            })
         }
-        else if(res.status===201){
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: res.data,
-              })
-              return <Redirect to="/"></Redirect>;
-        }
-        else{
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: res.data,
-              })
-              return <Redirect to="/"></Redirect>;
-        }
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        // axios.post("", data).then(res => {
+        // console.log(res.status)
+        // console.log(res)
+        // if(res.status===200){
+        //     Swal.fire({
+        //         icon: 'success',
+        //         title: res.data,
+        //       })
+        //       return <Layout/>;
+        // }
+        // else if(res.status===201){
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Oops...',
+        //         text: res.data,
+        //       })
+        //       return <Redirect to="/"></Redirect>;
+        // }
+        // else{
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Oops...',
+        //         text: res.data,
+        //       })
+        //       return <Redirect to="/"></Redirect>;
+        // }
+        // })
+        // .catch(err=>{
+        //     console.log(err);
+        // })
     }
 
     return (

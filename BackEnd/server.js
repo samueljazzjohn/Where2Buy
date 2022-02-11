@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var connectDB =require('./config/dbconnection')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 connectDB
 
