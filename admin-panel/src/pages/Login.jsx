@@ -1,8 +1,8 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import {Redirect} from 'react-router-dom'
+import { Redirect, Route, useHistory, Router } from 'react-router-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/login.css'
@@ -10,28 +10,33 @@ import '../assets/css/login.css'
 import Layout from '../components/layout/Layout'
 
 import '../assets/css/login.css'
+import Routes from '../components/Routes';
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Login = () => {
 
-    const [username,setUsername]=useState("")
-    const [password,setPassword] =useState("")
-    const type="admin"
+    let history=useHistory();
 
-    const handleSubmit=(e)=>{
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const type = "admin"
+
+    const handleSubmit = (e) => {
         e.preventDefault()
-        let data={
-            username:username,
-            password:password
+        let data = {
+            username: username,
+            password: password
         }
         console.log(username)
         console.log(password)
         console.log(data)
-        if(data.username=='admin'&&data.password=='admin123'){
-            return <Layout />;
-        }else{
+        if (data.username === 'admin' && data.password === 'admin123') {
+            console.log("hi")
+            history.push('layout')
+        } else {
             Swal.fire({
-                icon:'error',
-                title:'Username or password incorrect'
+                icon: 'error',
+                title: 'Username or password incorrect'
             })
         }
         // axios.post("", data).then(res => {
@@ -76,13 +81,13 @@ const Login = () => {
                     <Form className='form'>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control className='input' value={username} onChange={e=>setUsername(e.target.value)} type="text" placeholder="Enter username" />
-                            
+                            <Form.Control className='input' value={username} onChange={e => setUsername(e.target.value)} type="text" placeholder="Enter username" />
+
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control className='input' value={password} onChange={e=>setPassword(e.target.value)} type="password" placeholder="Password" />
+                            <Form.Control className='input' value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
                         </Form.Group>
 
                         <div className="d-grid pt-2">

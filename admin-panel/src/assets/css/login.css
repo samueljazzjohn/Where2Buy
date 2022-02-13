@@ -3,11 +3,6 @@
   padding: 0;
   background-color: #2d2d2d;
 }
-/* .container{
-  width: 100%;
-  height: 100%;
-  background-color: #2d2d2d;
-} */
 
 .form-container{
   margin: auto;
@@ -40,8 +35,6 @@
     outline: none !important;
     border: 1px solid #ff4a6b;
     color: #ff4a6b;
-  /* border-color: 1px solid rgb(17, 17, 17) !important; */
-  /* box-shadow: 0 0 10px solid rgb(17, 17, 17) !important; */
 
 }
 
@@ -52,8 +45,6 @@
   outline: none !important;
   box-shadow: 0 0 10px #2d2d2d;
   color: #ff4a6b;
-  /* border-color: 1px solid rgb(17, 17, 17) !important;
-  box-shadow: 0 0 10px solid rgb(17, 17, 17) !important; */
 }
 
 .btn{

@@ -53,10 +53,3 @@
     );
     color: var(--txt-white);
 }
-
-.title{
-    font-size: large;
-    font-weight: bold;
-    color: rgb(196, 52, 52);
-    text-align: inherit;
-}
