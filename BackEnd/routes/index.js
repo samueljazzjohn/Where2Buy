@@ -46,7 +46,7 @@ router.get('/', function (req, res, next) {
 
 
 router.post('/login',(req,res,next)=>{
-  UserModel.findOne({email:req.body.email},(err,doc)=>{
+  UserModel.findOne({email:req.body.email,type:req.body.type},(err,doc)=>{
     if (err) return res.status(500).json({"msg":err});
     if(doc==null){
       return res.status(403).json('username Incorrect');
@@ -59,7 +59,8 @@ router.post('/login',(req,res,next)=>{
         token:token,
         email:req.body.email,
         username:doc.username,
-        msg:"Success"
+        msg:"Success",
+        type:req.body.type
       })
     }
     return res.status(403).json('password incorrect')

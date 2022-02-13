@@ -8,6 +8,7 @@ const ShopSchema = new mongoose.Schema({
         ref: 'UserModel'
     },
     phone: { type: String, required: true },
+    place: { type: String, required: true },
     location: {
         type: {
             type: String,
