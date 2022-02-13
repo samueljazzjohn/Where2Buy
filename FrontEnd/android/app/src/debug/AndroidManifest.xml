@@ -1,7 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.where2buy">
+    xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="32" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <application>
+        <activity  android:name="com.example.where2buy.MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>

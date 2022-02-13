@@ -2,6 +2,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:where2buy/Components/network_handler.dart';
+import 'package:where2buy/Models/user_model.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/signup_screen.dart';
@@ -108,13 +109,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               side:
                                   BorderSide(width: 1, color: Colors.black54)),
                           onPressed: () {
-                            setState(() {
-                              isLoading = true;
-                            });
                             if (loginFormKey!.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
                               Map<String, dynamic> data = {
                                 'email': _userController.text,
-                                'password': _pasController.text
+                                'password': _pasController.text,
+                                'type': widget.type
                               };
                               net.postReq("/login", data).then((res) {
                                 res.statusCode == 200 || res.statusCode == 201

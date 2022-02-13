@@ -15,26 +15,24 @@ class StoreProfile extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor:primaryBlack
-      ),
+      appBar: AppBar(elevation: 0, backgroundColor: primaryBlack),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-        decoration:BoxDecoration(
-          color:primaryBlack,
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        decoration: BoxDecoration(
+          color: primaryBlack,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children:[ 
-            Container(
-            height: size.height*0.35,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            height: size.height * 0.35,
             child: Center(
               child: Column(
                 children: [
                   CircularImage(),
-                  SizedBox(height:10),
-                  Text('StoreName',style: TextStyle(color:Colors.grey[400]),)
+                  SizedBox(height: 10),
+                  Text(
+                    'StoreName',
+                    style: TextStyle(color: Colors.grey[400]),
+                  )
                 ],
               ),
             ),
@@ -52,29 +50,57 @@ class StoreProfile extends StatelessWidget {
           //   ),
           // ),
           // Spacer(),
-          Column(
-            children:[
-              buildListTile(name: 'mail', iconName: Icons.mail_outline,isLeading: true,ctx: context),
-              buildListTile(name: '9851234562', iconName: Icons.phone,isLeading: true,ctx: context),
-              buildListTile(ctx: context, name: 'Edit Profile', iconName: Icons.edit, isLeading: false,nextScreen: StoreEditProfileScreen()),
-              buildListTile(ctx: context, name: 'Logout', iconName: Icons.logout, isLeading: false,nextScreen: TypeScreen())
-            ]
-          )
-          ]),
+          Column(children: [
+            buildListTile(
+                name: 'mail',
+                iconName: Icons.mail_outline,
+                isLeading: true,
+                ctx: context),
+            buildListTile(
+                name: '9851234562',
+                iconName: Icons.phone,
+                isLeading: true,
+                ctx: context),
+            buildListTile(
+                name: 'place',
+                iconName: Icons.location_on,
+                isLeading: true,
+                ctx: context),
+            buildListTile(
+                ctx: context,
+                name: 'Edit Profile',
+                iconName: Icons.edit,
+                isLeading: false,
+                nextScreen: StoreEditProfileScreen()),
+            buildListTile(
+                ctx: context,
+                name: 'Logout',
+                iconName: Icons.logout,
+                isLeading: false,
+                nextScreen: TypeScreen())
+          ])
+        ]),
       ),
     );
   }
 
-  ListTile buildListTile({required BuildContext ctx, required String name,required IconData iconName,required bool isLeading, Widget? nextScreen}) {
+  ListTile buildListTile(
+      {required BuildContext ctx,
+      required String name,
+      required IconData iconName,
+      required bool isLeading,
+      Widget? nextScreen}) {
     return ListTile(
-                trailing:Icon(iconName,color:Colors.grey[400]),
-                title: Text(name,style: TextStyle(color:Colors.grey[400]),),
-                // trailing : !isLeading ? Icon(iconName,color:Colors.grey[400]):SizedBox(),
-                onTap:() => !isLeading ? Navigator.push(ctx, 
-                  MaterialPageRoute(builder: (ctx)=>
-                    nextScreen!
-                  )
-                ): print('no action'), 
-              );
+      trailing: Icon(iconName, color: Colors.grey[400]),
+      title: Text(
+        name,
+        style: TextStyle(color: Colors.grey[400]),
+      ),
+      // trailing : !isLeading ? Icon(iconName,color:Colors.grey[400]):SizedBox(),
+      onTap: () => !isLeading
+          ? Navigator.push(
+              ctx, MaterialPageRoute(builder: (ctx) => nextScreen!))
+          : print('no action'),
+    );
   }
 }

@@ -8,7 +8,8 @@ import 'package:where2buy/Components/config.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final String type;
-  const NavigationDrawerWidget({Key? key,required this.type}) : super(key: key);
+  const NavigationDrawerWidget({Key? key, required this.type})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +68,12 @@ class NavigationDrawerWidget extends StatelessWidget {
               title: Text('Home', style: TextStyle(color: Colors.white)),
               leading: Icon(Icons.home, color: Colors.white),
               onTap: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => type=='user'? UserHomeScreen(
-                          type: 'store',
-                        ): StoreHomeScreen(type: type)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => type == 'user'
+                        ? UserHomeScreen(
+                            type: 'store',
+                          )
+                        : StoreHomeScreen(type: type)));
               },
             ),
             SizedBox(height: 15),
@@ -78,8 +81,9 @@ class NavigationDrawerWidget extends StatelessWidget {
               title: Text('Profile', style: TextStyle(color: Colors.white)),
               leading: Icon(Icons.person, color: Colors.white),
               onTap: () {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => type=='user' ? UserProfile():StoreProfile()));
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) =>
+                        type == 'user' ? UserProfile() : StoreProfile()));
               },
             ),
             SizedBox(height: 15),
