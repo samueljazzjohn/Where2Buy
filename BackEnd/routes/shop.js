@@ -41,7 +41,7 @@ const upload = multer({
 router.get('/', middleware.athenticateToken, async (req, res, next) => {
   console.log(req.user)
   ShopModel.find({})
-    .select("location phone _id")
+    .select("location place category phone _id")
     .populate('user')
     .exec()
     .then(data => {
@@ -59,10 +59,34 @@ router.get('/', middleware.athenticateToken, async (req, res, next) => {
     })
 })
 
+// Getting the store profile data
+router.get('/profiledata', middleware.athenticateToken, async (req, res, next) => {
+  console.log(req.user)
+  userHelper.getUserId(req.body.mail.then((userId)=>{
+    if(!userId){
+      return res.status(404).json({
+        message: "Product not found"
+      });
+    }
+    ShopModel.findOne({user:userId},(data)=>{
+      return res.status(200).json({
+        phone:data.phone,
+        place:data.place,
+        shopImg:data.shopImg
+      })
+    }).catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+  }))  
+})
 
 
-// Adding shop details
-router.post('/update', middleware.athenticateToken, async function (req, res, next) {
+
+// Updating
+router.post('/profileupdate', middleware.athenticateToken, async function (req, res, next) {
   console.log(req.user)
   await userHelper.getUserId(req.body.mail).then((userId) => {
     console.log(userId)
@@ -73,6 +97,8 @@ router.post('/update', middleware.athenticateToken, async function (req, res, ne
     }
     const shop = new ShopModel({
       phone: req.body.phone,
+      place:req.body.place,
+      category:req.body.category,
       location: req.body.location,
       user: userId
     })
