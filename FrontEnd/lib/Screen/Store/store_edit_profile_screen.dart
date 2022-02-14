@@ -21,8 +21,10 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     TextEditingController _storeName = TextEditingController();
-    TextEditingController _password = TextEditingController();
+    // TextEditingController _password = TextEditingController();
     TextEditingController _email = TextEditingController();
+    TextEditingController _phone = TextEditingController();
+    TextEditingController _place = TextEditingController();
     String dropdownValue = 'Select Store type';
     final items = [
       'Super Market',
@@ -49,24 +51,26 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                 ),
                 SizedBox(height: 25),
                 Center(
-                      child: GestureDetector(
-                          onTap: () => showModalBottomSheet(
-                              context: context,
-                              builder: (context) => BuildBottomSheet()),
-                          child: CircularImage(
-                            isEditable: true
-                          )),
+                  child: GestureDetector(
+                      onTap: () => showModalBottomSheet(
+                          context: context,
+                          builder: (context) => BuildBottomSheet()),
+                      child: CircularImage(isEditable: true)),
                 ),
                 SizedBox(height: 35),
                 InputField(controller: _storeName, hintText: 'Enter StoreName'),
                 SizedBox(
                   height: 20,
                 ),
-                InputField(controller: _password, hintText: 'Enter Password'),
+                InputField(controller: _email, hintText: 'Enter email'),
                 SizedBox(
                   height: 20,
                 ),
-                InputField(controller: _email, hintText: 'Enter email'),
+                InputField(controller: _phone, hintText: 'Enter Phone Number'),
+                SizedBox(
+                  height: 20,
+                ),
+                InputField(controller: _place, hintText: 'Enter place'),
                 SizedBox(
                   height: 20,
                 ),

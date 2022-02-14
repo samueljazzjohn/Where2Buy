@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +10,7 @@ class NetworkHandler {
   // String baseUrl = 'http://127.0.0.1:55981';
   var log = Logger();
 
-  Future<http.Response> getReq(String url) async {
+  Future<http.Response> getReq(String url, Map<String, String> map) async {
     url = formatter(url);
     var response = await http.get(Uri.parse(url));
     print("response:${response.statusCode}");
@@ -19,9 +20,16 @@ class NetworkHandler {
 
   Future<http.Response> postReq(String url, Map<String, dynamic> body) async {
     url = formatter(url);
-    var response = await http.post(Uri.parse(url), body: body);
-    print("response:${response.statusCode}");
-    log.i(response.body);
+    http.Response response;
+    try {
+      response = await http.post(Uri.parse(url), body: body);
+      print("response:${response.statusCode}");
+      log.i(response.body);
+    } on SocketException catch (e) {
+      throw e.message;
+    } catch (e) {
+      throw e;
+    }
     return response;
   }
 

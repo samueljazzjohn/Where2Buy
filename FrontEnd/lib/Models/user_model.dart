@@ -8,11 +8,13 @@ class UserModel {
   String email;
   String password;
   String jwt;
+  String type;
   UserModel(
       {required this.userName,
       required this.password,
       required this.email,
-      required this.jwt});
+      required this.jwt,
+      required this.type});
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

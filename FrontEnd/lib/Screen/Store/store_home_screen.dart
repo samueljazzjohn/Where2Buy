@@ -57,13 +57,19 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                 // Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NavigationDrawerWidget()));
               },
               icon: SvgPicture.asset(menu, color: Colors.white))),
-      drawer: NavigationDrawerWidget(type: widget.type,),
+      drawer: NavigationDrawerWidget(
+        type: widget.type,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             HeaderWithSearchbox(),
             SizedBox(height: 30),
-            Button(isIcon: true, btnText: 'Add a product', nextScreen: AddProductScreen(type: widget.type),assetName: Icons.add_box_outlined),
+            Button(
+                isIcon: true,
+                btnText: 'Add a product',
+                nextScreen: AddProductScreen(type: widget.type),
+                assetName: Icons.add_box_outlined),
             SizedBox(height: 30),
             Container(
               height: size.height * 0.7,

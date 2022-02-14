@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:where2buy/Components/app_bar.dart';
 import 'package:where2buy/Components/shop_list.dart';
 import 'package:where2buy/Screen/User/widget/shop_card_list.dart';
@@ -12,7 +13,7 @@ import 'package:where2buy/Components/config.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final String type;
-  const UserHomeScreen({Key? key,required this.type}) : super(key: key);
+  const UserHomeScreen({Key? key, required this.type}) : super(key: key);
 
   @override
   State<UserHomeScreen> createState() => _UserHomeScreenState();
@@ -46,7 +47,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   // Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NavigationDrawerWidget()));
                 },
                 icon: SvgPicture.asset(menu, color: Colors.white))),
-        drawer: NavigationDrawerWidget(type: widget.type,),
+        drawer: NavigationDrawerWidget(
+          type: widget.type,
+        ),
         body: SingleChildScrollView(
             child: Column(
           children: [

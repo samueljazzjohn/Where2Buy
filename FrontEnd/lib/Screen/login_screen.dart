@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _pasController = TextEditingController();
   NetworkHandler net = NetworkHandler();
+  UserModel? _userModel;
 
   @override
   void initState() {
@@ -118,13 +123,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'password': _pasController.text,
                                 'type': widget.type
                               };
-                              net.postReq("/login", data).then((res) {
-                                res.statusCode == 200 || res.statusCode == 201
-                                    ? LoginNavigate(widget.type, res)
-                                    : buildFlash(context,
-                                        "Username or password incorrect");
-                              }).catchError(
-                                  (err) => {buildFlash(context, err)});
+                              try {
+                                net
+                                    .postReq("/login", data)
+                                    .timeout(Duration(seconds: 30))
+                                    .then((res) {
+                                  var decode = json.decode(res.body);
+                                  print("res=$decode");
+                                  setState(() {
+                                    _userModel = UserModel.fromJson(decode);
+                                  });
+                                  res.statusCode == 200 || res.statusCode == 201
+                                      ? LoginNavigate(widget.type, _userModel!)
+                                      : buildFlash(context,
+                                          "Username or password incorrect");
+                                });
+                                // .catchError(
+                                //         (err) => {buildFlash(context, err)});
+                              } on TimeoutException catch (e) {
+                                buildFlash(context, "Connection error");
+                              } on Error catch (e) {
+                                buildFlash(context,
+                                    "Something went wrong..please try again later");
+                              }
+
                               setState(() {
                                 isLoading = false;
                               });
@@ -209,20 +231,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  LoginNavigate(String type, var res) {
-    storeValue(type, res);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+  LoginNavigate(String type, UserModel model) {
+    storeValue(type, model);
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
       return widget.type == 'user'
           ? UserHomeScreen(type: widget.type)
           : StoreHomeScreen(type: widget.type);
     }));
   }
 
-  Future<void> storeValue(String type, var res) async {
+  Future<void> storeValue(String type, UserModel model) async {
+    print(type);
+    print(model.userName);
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString("type", type);
-    pref.setString("token", res.token);
-    pref.setString("username", res.mail);
-    pref.setString("mail", res.mail);
+    pref.setString("token", model.jwt);
+    pref.setString("username", model.userName);
+    pref.setString("mail", model.email);
   }
 }

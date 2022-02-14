@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
 import 'package:where2buy/Screen/Store/store_profile_screen.dart';
 import 'package:where2buy/Screen/User/user_profile.dart';
@@ -6,10 +7,35 @@ import 'package:where2buy/Screen/User/usr_home_screen.dart';
 import 'package:where2buy/Screen/type_screen.dart';
 import 'package:where2buy/Components/config.dart';
 
-class NavigationDrawerWidget extends StatelessWidget {
+class NavigationDrawerWidget extends StatefulWidget {
   final String type;
   const NavigationDrawerWidget({Key? key, required this.type})
       : super(key: key);
+
+  @override
+  State<NavigationDrawerWidget> createState() => _NavigationDrawerWidgetState();
+}
+
+class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
+  late String username, email;
+
+  Future<void> updateValues() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? uname = await pref.getString('username');
+    String? mail = await pref.getString('mail');
+    print(uname);
+    print(mail);
+    setState(() {
+      username = uname ?? ' ';
+      email = mail ?? ' ';
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateValues().then((value) => null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +69,12 @@ class NavigationDrawerWidget extends StatelessWidget {
                             ],
                           ))),
                   Text(
-                    'Username',
+                    username,
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                   SizedBox(height: 5),
                   Text(
-                    'username@gmail.com',
+                    email,
                     style: TextStyle(fontSize: 12, color: Colors.white70),
                   )
                 ],
@@ -69,11 +95,11 @@ class NavigationDrawerWidget extends StatelessWidget {
               leading: Icon(Icons.home, color: Colors.white),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => type == 'user'
+                    builder: (context) => widget.type == 'user'
                         ? UserHomeScreen(
                             type: 'store',
                           )
-                        : StoreHomeScreen(type: type)));
+                        : StoreHomeScreen(type: widget.type)));
               },
             ),
             SizedBox(height: 15),
@@ -81,9 +107,10 @@ class NavigationDrawerWidget extends StatelessWidget {
               title: Text('Profile', style: TextStyle(color: Colors.white)),
               leading: Icon(Icons.person, color: Colors.white),
               onTap: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) =>
-                        type == 'user' ? UserProfile() : StoreProfile()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => widget.type == 'user'
+                        ? UserProfile()
+                        : StoreProfile()));
               },
             ),
             SizedBox(height: 15),
@@ -109,39 +136,4 @@ class NavigationDrawerWidget extends StatelessWidget {
       ),
     );
   }
-
-  // ListTile buildMenuItem({required String itemName,required IconData itemIcon, required Function() press}) {
-  //   return ListTile(
-  //       title: Text(itemName), trailing: Icon(itemIcon), onTap: press());
-  // }
-
-  // selectedItem(BuildContext context, int i) {
-  //   switch (i) {
-  //     case 0 :{
-  //       Navigator.push(context, MaterialPageRoute(builder: (context)=>
-  //         UserHomeScreen()
-  //       ));
-  //     }
-  //       break;
-  //     case 1 :{
-  //       Navigator.push(context, MaterialPageRoute(builder: (context)=>
-  //         UserHomeScreen()
-  //       ));
-  //     }
-  //       break;
-  //     case 2 :{
-  //       Navigator.push(context, MaterialPageRoute(builder: (context)=>
-  //         UserHomeScreen()
-  //       ));
-  //     }
-  //       break;
-  //     case 3 :{
-  //       Navigator.push(context, MaterialPageRoute(builder: (context)=>
-  //         TypeScreen()
-  //       ));
-  //     }
-  //       break;
-  //     // default:
-  //   }
-  // }
 }
