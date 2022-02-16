@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var UserModel = require('../models/user-model')
 var CustomerModel = require('../models/customer-model')
 var ShopModel = require('../models/shop-model')
 var userHelper = require('../Helpers/user-helper')
@@ -60,15 +61,22 @@ router.get('/', middleware.athenticateToken, async (req, res, next) => {
 })
 
 // Getting the store profile data
-router.get('/profiledata', middleware.athenticateToken, async (req, res, next) => {
+router.get('/profiledata',  async (req, res, next) => {
   console.log(req.user)
-  userHelper.getUserId(req.body.mail.then((userId)=>{
+  var UserId;
+  userHelper.getUserId(req.body.mail).then((userId)=>{
+    UserId=userId;
+    if(UserId==null){
+      return res.status(403).json({
+        message:"no data found"
+      })
+    }
     if(!userId){
       return res.status(404).json({
         message: "Product not found"
       });
     }
-    ShopModel.findOne({user:userId},(data)=>{
+    ShopModel.findOne({user:UserId},(data)=>{
       return res.status(200).json({
         phone:data.phone,
         place:data.place,
@@ -77,11 +85,23 @@ router.get('/profiledata', middleware.athenticateToken, async (req, res, next) =
     }).catch(err => {
       console.log(err);
       res.status(500).json({
-        error: err
+        message: err.Message
       });
     });
-  }))  
+  });
 })
+
+// Update shopimage
+router.patch('/upload/image', upload.single('imagefile'), async (req, res, next) => {
+  console.log(req.file)
+  console.log(req.body.mail)
+  if (req.fileValidationError) {
+    return res.send(req.fileValidationError)
+  } else {
+    ShopModel.updateOne({})
+  }
+});
+
 
 
 
@@ -111,6 +131,9 @@ router.post('/profileupdate', middleware.athenticateToken, async function (req, 
       error: err
     });
   });
+  
+  // UserModel.updateOne({_id:UserId},{})
+
 });
 
 
