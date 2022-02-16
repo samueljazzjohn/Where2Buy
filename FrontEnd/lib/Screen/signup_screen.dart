@@ -18,11 +18,10 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _paswController = TextEditingController();
   final TextEditingController _mailController = TextEditingController();
-  NetworkHandler net = NetworkHandler();
+  late NetworkHandler net;
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -102,14 +101,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                     'type': widget.type
                                   };
                                   print(data);
-                                  net.postReq("/signup",data).then((res) {
+                                  net = NetworkHandler(ctx: context);
+                                  net.postReq("/signup", data).then((res) {
                                     print("Signup res $res");
-                                    res.statusCode == 200 || res.statusCode == 201
-                                      ? Navigator.pushReplacement(context,
-                                          MaterialPageRoute(builder: (context) {
-                                          return LoginScreen(type: widget.type);
-                                        }))
-                                      : print('error');
+                                    res.statusCode == 200 ||
+                                            res.statusCode == 201
+                                        ? Navigator.pushReplacement(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                            return LoginScreen(
+                                                type: widget.type);
+                                          }))
+                                        : print('error');
                                   });
                                 }
                               },

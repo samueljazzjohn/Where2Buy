@@ -1,20 +1,40 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkHandler {
+  BuildContext ctx;
+  NetworkHandler({required this.ctx});
   String baseUrl = 'https://where2buy-2022.herokuapp.com';
   // String baseUrl = 'http://127.0.0.1:55981';
   var log = Logger();
+  var token = getToken();
 
   Future<http.Response> getReq(String url, Map<String, String> map) async {
     url = formatter(url);
-    var response = await http.get(Uri.parse(url));
-    print("response:${response.statusCode}");
-    log.i(response.body);
+    var response = await http.get(
+      Uri.parse(url),
+      // headers: {"Authorization": "Bearer $token"},
+    );
+    try {
+      print("response:${response.statusCode}");
+      log.i(response.body);
+      // return response;
+    } on SocketException catch (e) {
+      print("Socket exception:${e.message}");
+      throw "Internet not connected!!!";
+    } on TimeoutException catch (e) {
+      print("timeouterror");
+      throw "Server not responding..please try again later!!!";
+    } catch (e) {
+      throw "Something went wrong...please try again later!!!";
+    }
     return response;
   }
 
@@ -22,19 +42,48 @@ class NetworkHandler {
     url = formatter(url);
     http.Response response;
     try {
-      response = await http.post(Uri.parse(url), body: body);
+      response = await http
+          .post(Uri.parse(url),
+              // headers: {
+              //   "Content-type": "application/json",
+              //   "Authorization": "Bearer $token"
+              // },
+              body: body)
+          .timeout(Duration(seconds: 45));
       print("response:${response.statusCode}");
       log.i(response.body);
     } on SocketException catch (e) {
-      throw e.message;
+      print("Socket exception:${e.message}");
+      throw "Internet not connected!!!";
+    } on TimeoutException catch (e) {
+      print("timeouterror");
+      throw "Server not responding..please try again later!!!";
     } catch (e) {
-      throw e;
+      throw "Something went wrong...please try again later!!!";
     }
+    return response;
+  }
+
+  Future<http.StreamedResponse> patchImage(String url, String filepath) async {
+    url = formatter(url);
+    var request = http.MultipartRequest('PATCH', Uri.parse(url));
+    request.files.add(await http.MultipartFile.fromPath("img", filepath));
+    request.headers.addAll({
+      "Content-type": "multipart/form-data",
+    });
+    var response = request.send();
+    log.i(response);
     return response;
   }
 
   String formatter(String url) {
     return baseUrl + url;
+  }
+
+  static getToken() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? token = await pref.getString('token');
+    return token;
   }
 }
 

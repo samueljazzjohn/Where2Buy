@@ -17,24 +17,17 @@ class NavigationDrawerWidget extends StatefulWidget {
 }
 
 class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
-  late String username, email;
+  String? username, email;
 
-  Future<void> updateValues() async {
+  Future<Map<String, String?>> updateValues() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? uname = await pref.getString('username');
     String? mail = await pref.getString('mail');
-    print(uname);
-    print(mail);
     setState(() {
       username = uname ?? ' ';
       email = mail ?? ' ';
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    updateValues().then((value) => null);
+    return {"username": uname, "mail": mail};
   }
 
   @override
@@ -68,15 +61,43 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                                       color: Colors.white)),
                             ],
                           ))),
-                  Text(
-                    username,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    email,
-                    style: TextStyle(fontSize: 12, color: Colors.white70),
+
+                  FutureBuilder(
+                    future: updateValues(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.data == null) {
+                        return SizedBox();
+                      } else {
+                        return Container(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              username!,
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              email!,
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.white70),
+                            )
+                          ],
+                        ));
+                      }
+                    },
                   )
+
+                  // Text(
+                  //   username,
+                  //   style: TextStyle(fontSize: 20, color: Colors.white),
+                  // ),
+                  // SizedBox(height: 5),
+                  // Text(
+                  //   email,
+                  //   style: TextStyle(fontSize: 12, color: Colors.white70),
+                  // )
                 ],
               ),
             ),
@@ -110,7 +131,10 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => widget.type == 'user'
                         ? UserProfile()
-                        : StoreProfile()));
+                        : StoreProfile(
+                            storename: username!,
+                            email: email!,
+                          )));
               },
             ),
             SizedBox(height: 15),

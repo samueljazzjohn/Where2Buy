@@ -13,52 +13,37 @@ import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
 
 class StoreProfile extends StatefulWidget {
-  const StoreProfile({Key? key}) : super(key: key);
+  final String storename;
+  final String email;
+  const StoreProfile({Key? key, required this.storename, required this.email})
+      : super(key: key);
 
   @override
   State<StoreProfile> createState() => _StoreProfileState();
 }
 
 class _StoreProfileState extends State<StoreProfile> {
-  late String storename, email;
   StoreProfileModel? _storeProfileModel;
-  NetworkHandler _networkHandler = NetworkHandler();
+  late NetworkHandler _networkHandler;
 
-  Future<void> updateValues() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? uname = await pref.getString('username');
-    String? email = await pref.getString('mail');
-    print(uname);
-    print(email);
-    setState(() {
-      storename = uname ?? ' ';
-      email = email ?? ' ';
-    });
-  }
-
-  Future<String> getMail() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String mail = pref.getString('mail') ?? '';
-    return mail;
-  }
-
-  void setModel(Response res) {
+  Future<List<StoreProfileModel>> getStoreDetails() async {
+    _networkHandler = NetworkHandler(ctx: context);
+    Response res = await _networkHandler
+        .getReq('/shop/profiledata', {'mail': widget.email});
     var decode = json.decode(res.body);
-    setState(() {
-      _storeProfileModel = StoreProfileModel.fromJson(decode);
-    });
+    _storeProfileModel = StoreProfileModel.fromJson(decode);
+    return decode.map<StoreProfileModel>(_storeProfileModel).toList();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(seconds: 5));
-    updateValues().then((value) => null);
-    late String mail;
-    getMail().then((res) => {mail = res});
-    _networkHandler
-        .getReq('/profiledata', {'mail': mail}).then((res) => {setModel(res)});
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Future.delayed(Duration(seconds: 5));
+  //   updateValues().then((value) => null);
+  //   getStoreDetails();
+  //   print(storename);
+  //   print(email);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +65,7 @@ class _StoreProfileState extends State<StoreProfile> {
                   CircularImage(),
                   SizedBox(height: 6),
                   Text(
-                    storename,
+                    widget.storename,
                     style: TextStyle(color: Colors.grey[400]),
                   )
                 ],
@@ -100,22 +85,35 @@ class _StoreProfileState extends State<StoreProfile> {
           //   ),
           // ),
           // Spacer(),
+
           Column(children: [
             buildListTile(
-                name: email,
+                name: widget.email,
                 iconName: Icons.mail_outline,
                 isLeading: true,
                 ctx: context),
-            buildListTile(
-                name: _storeProfileModel!.phone,
-                iconName: Icons.phone,
-                isLeading: true,
-                ctx: context),
-            buildListTile(
-                name: _storeProfileModel!.place,
-                iconName: Icons.location_on,
-                isLeading: true,
-                ctx: context),
+            FutureBuilder(
+                future: getStoreDetails(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == null) {
+                    return Container(
+                      child: SizedBox(),
+                    );
+                  } else {
+                    return Column(children: [
+                      buildListTile(
+                          name: _storeProfileModel!.phone,
+                          iconName: Icons.phone,
+                          isLeading: true,
+                          ctx: context),
+                      buildListTile(
+                          name: _storeProfileModel!.place,
+                          iconName: Icons.location_on,
+                          isLeading: true,
+                          ctx: context),
+                    ]);
+                  }
+                }),
             buildListTile(
                 ctx: context,
                 name: 'Edit Profile',

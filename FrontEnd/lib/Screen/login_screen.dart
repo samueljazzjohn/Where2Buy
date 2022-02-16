@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _pasController = TextEditingController();
-  NetworkHandler net = NetworkHandler();
+  late NetworkHandler net;
   UserModel? _userModel;
 
   @override
@@ -123,29 +123,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'password': _pasController.text,
                                 'type': widget.type
                               };
-                              try {
-                                net
-                                    .postReq("/login", data)
-                                    .timeout(Duration(seconds: 30))
-                                    .then((res) {
-                                  var decode = json.decode(res.body);
-                                  print("res=$decode");
-                                  setState(() {
-                                    _userModel = UserModel.fromJson(decode);
-                                  });
-                                  res.statusCode == 200 || res.statusCode == 201
-                                      ? LoginNavigate(widget.type, _userModel!)
-                                      : buildFlash(context,
-                                          "Username or password incorrect");
+                              // try {
+                              net = NetworkHandler(ctx: context);
+                              net.postReq("/login", data).then((res) {
+                                var decode = json.decode(res.body);
+                                print("res=$decode");
+                                setState(() {
+                                  _userModel = UserModel.fromJson(decode);
                                 });
-                                // .catchError(
-                                //         (err) => {buildFlash(context, err)});
-                              } on TimeoutException catch (e) {
-                                buildFlash(context, "Connection error");
-                              } on Error catch (e) {
-                                buildFlash(context,
-                                    "Something went wrong..please try again later");
-                              }
+                                res.statusCode == 200 || res.statusCode == 201
+                                    ? LoginNavigate(widget.type, _userModel!)
+                                    : buildFlash(context,
+                                        "Username or password incorrect");
+                              }).catchError(
+                                  (err) => {buildFlash(context, err)});
 
                               setState(() {
                                 isLoading = false;
@@ -242,11 +233,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> storeValue(String type, UserModel model) async {
     print(type);
-    print(model.userName);
+    print(model.username);
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString("type", type);
-    pref.setString("token", model.jwt);
-    pref.setString("username", model.userName);
+    pref.setString("token", model.token);
+    pref.setString("username", model.username);
     pref.setString("mail", model.email);
+    pref.setBool("isLoggedin", true);
   }
 }

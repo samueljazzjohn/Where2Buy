@@ -25,18 +25,30 @@ class _SplashScreenState extends State<SplashScreen> {
           backgroundColor: Color(0Xb09496),
           splash: Column(
             children: [
-              Image.asset(cart1,width:45,height: 45, ),
+              Image.asset(
+                cart1,
+                width: 45,
+                height: 45,
+              ),
               SizedBox(width: 10),
-              Text('Where2Buy',style:TextStyle(color:Colors.redAccent , fontSize: 20,fontWeight: FontWeight.bold))
+              Text('Where2Buy',
+                  style: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold))
             ],
           ),
           screenFunction: () async {
             SharedPreferences pref = await SharedPreferences.getInstance();
-            bool loggedIn = pref.getBool('LoggedIn') ?? false;
+            bool loggedIn = pref.getBool('isLoggedin') ?? false;
             return loggedIn
                 ? pref.getString('type') == 'user'
-                    ? const UserHomeScreen(type: 'user',)
-                    : const StoreHomeScreen(type: 'store',)
+                    ? const UserHomeScreen(
+                        type: 'user',
+                      )
+                    : const StoreHomeScreen(
+                        type: 'store',
+                      )
                 : const TypeScreen();
           },
           splashTransition: SplashTransition.fadeTransition,
