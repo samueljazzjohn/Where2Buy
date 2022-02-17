@@ -16,11 +16,14 @@ class NetworkHandler {
   var log = Logger();
   var token = getToken();
 
-  Future<http.Response> getReq(String url, Map<String, String> map) async {
+  Future<http.Response> getReq(String url, Map<String, String> data) async {
     url = formatter(url);
     var response = await http.get(
       Uri.parse(url),
-      // headers: {"Authorization": "Bearer $token"},
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
     );
     try {
       print("response:${response.statusCode}");
@@ -49,7 +52,7 @@ class NetworkHandler {
               //   "Authorization": "Bearer $token"
               // },
               body: body)
-          .timeout(Duration(seconds: 45));
+          .timeout(Duration(seconds: 75));
       print("response:${response.statusCode}");
       log.i(response.body);
     } on SocketException catch (e) {
@@ -64,16 +67,27 @@ class NetworkHandler {
     return response;
   }
 
-  Future<http.StreamedResponse> patchImage(String url, String filepath) async {
+  Future<http.StreamedResponse> patchImage(
+      String url, String filepath, String mail, String type) async {
     url = formatter(url);
-    var request = http.MultipartRequest('PATCH', Uri.parse(url));
-    request.files.add(await http.MultipartFile.fromPath("img", filepath));
-    request.headers.addAll({
-      "Content-type": "multipart/form-data",
-    });
-    var response = request.send();
-    log.i(response);
-    return response;
+    try {
+      var request = http.MultipartRequest('PATCH', Uri.parse(url));
+      request.files.add(await http.MultipartFile.fromPath("img", filepath));
+      request.headers.addAll({
+        "Content-type": "multipart/form-data",
+      });
+      request.fields['mail'] = mail;
+      request.fields['type'] = type;
+      var response = request.send();
+      log.i(response);
+      return response;
+    } on SocketException catch (e) {
+      throw "internet not connected";
+    } on TimeoutException catch (e) {
+      throw "Server not responding...Please try again later";
+    } catch (e) {
+      throw Future.error(e);
+    }
   }
 
   String formatter(String url) {
