@@ -51,10 +51,14 @@ router.post('/login',(req,res,next)=>{
     if(doc==null){
       return res.status(403).json('username Incorrect');
     }
+    console.log(doc)
+    const data={
+      userId:doc._id,
+      mail:doc.email
+    }
+    console.log(data)
     if(doc.password==req.body.password){
-      let token = jwt.sign({username:req.body.username},process.env.JWT_SECRET_KEY,{
-        expiresIn:"24h"
-      });
+      const token = jwt.sign(JSON.stringify(data),process.env.JWT_SECRET_KEY);
       return res.json({
         token:token,
         email:req.body.email,
