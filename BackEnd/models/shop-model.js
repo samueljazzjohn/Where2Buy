@@ -14,11 +14,13 @@ const ShopSchema = new mongoose.Schema({
         type: {
             type: String,
             enum: ['Point'],
-            required: true
+            default : 'point'
+            // required: true
         },
         coordinates: {
             type: [Number],
-            required: true
+            default: []
+            // required: true
         }
     },
     shopImg: String
