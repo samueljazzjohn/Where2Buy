@@ -26,7 +26,7 @@ class _StoreProfileState extends State<StoreProfile> {
   StoreProfileModel? _storeProfileModel;
   late NetworkHandler _networkHandler;
 
-  Future<List<StoreProfileModel>> getStoreDetails() async {
+  Future<List<StoreProfileModel>> getStoreDetails(BuildContext ctx) async {
     _networkHandler = NetworkHandler(ctx: context);
     Response res = await _networkHandler
         .getReq('/shop/profiledata', {'mail': widget.email});
@@ -93,7 +93,7 @@ class _StoreProfileState extends State<StoreProfile> {
                 isLeading: true,
                 ctx: context),
             FutureBuilder(
-                future: getStoreDetails(),
+                future: getStoreDetails(context),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.data == null) {
                     return Container(
@@ -119,7 +119,10 @@ class _StoreProfileState extends State<StoreProfile> {
                 name: 'Edit Profile',
                 iconName: Icons.edit,
                 isLeading: false,
-                nextScreen: StoreEditProfileScreen()),
+                nextScreen: StoreEditProfileScreen(
+                  mail: widget.email,
+                  username: widget.storename,
+                )),
             buildListTile(
                 ctx: context,
                 name: 'Logout',

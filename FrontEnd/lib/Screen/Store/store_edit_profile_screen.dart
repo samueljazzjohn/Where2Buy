@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,42 +11,48 @@ import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Widgets/add_button.dart';
 import 'package:where2buy/Widgets/bottom_sheet.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
+import 'package:where2buy/Widgets/flash.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 
 class StoreEditProfileScreen extends StatefulWidget {
-  const StoreEditProfileScreen({Key? key}) : super(key: key);
+  final String mail;
+  final String username;
+  const StoreEditProfileScreen(
+      {Key? key, required this.mail, required this.username})
+      : super(key: key);
 
   @override
   State<StoreEditProfileScreen> createState() => _StoreEditProfileScreenState();
 }
 
 class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
-  GlobalKey<FormState>? storeProfileKey;
+  GlobalKey<FormState>? storeProfileKey = GlobalKey<FormState>();
+  // TextEditingController _storeName = TextEditingController();
+  // TextEditingController _password = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _phone = TextEditingController();
+  TextEditingController _place = TextEditingController();
+  String dropdownValue = 'Select Store type';
+  bool isLoading = false;
 
-  @override
-  void initState() {
-    storeProfileKey = GlobalKey<FormState>();
-  }
+  final items = [
+    'Super Market',
+    'Grocery Shop',
+    'Cosmetic Shop',
+    'Book Store',
+    'Electronic Shop',
+    'others'
+  ];
+
+  // @override
+  // void initState() {
+  //   storeProfileKey = GlobalKey<FormState>();
+  // }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     NetworkHandler _networkHandler = NetworkHandler(ctx: context);
-    TextEditingController _storeName = TextEditingController();
-    // TextEditingController _password = TextEditingController();
-    TextEditingController _email = TextEditingController();
-    TextEditingController _phone = TextEditingController();
-    TextEditingController _place = TextEditingController();
-    String dropdownValue = 'Select Store type';
-
-    final items = [
-      'Super Market',
-      'Grocery Shop',
-      'Cosmetic Shop',
-      'Book Store',
-      'Electronic Shop',
-      'others'
-    ];
 
     // final ImagePicker _picker = ImagePicker();
 
@@ -162,33 +170,102 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                                 SizedBox(
                                   width: 20,
                                 ),
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      maximumSize: Size(150, 50),
-                                      minimumSize: Size(150, 50),
-                                      primary: primaryBlack,
-                                      onPrimary: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                    ),
-                                    onPressed: () {
-                                      if (storeProfileKey!.currentState!
-                                          .validate()) {
-                                        var mail = getMail();
-                                        _networkHandler.postReq(
-                                            "/profileupdate", {
-                                          'mail': mail
-                                        }).then((res) => {
-                                              if (res == 200 || res == 201)
-                                                {
-                                                  // _networkHandler.patchImage(
-                                                  //     "/upload/image", _image.path)
-                                                }
-                                            });
-                                      }
-                                    },
-                                    child: Text('Save')),
+
+                                ValueListenableBuilder(
+                                  valueListenable: imageFileNotifier,
+                                  builder: (BuildContext context, File image,
+                                      Widget? child) {
+                                    return ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          maximumSize: Size(150, 50),
+                                          minimumSize: Size(150, 50),
+                                          primary: primaryBlack,
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          if (storeProfileKey!.currentState!
+                                              .validate()) {
+                                            Map<String, dynamic> data = {
+                                              'mail': widget.mail,
+                                              'phone': _phone.text,
+                                              'place': _place.text,
+                                              'category': dropdownValue,
+                                              // 'location': {
+                                              //   'type': 'point',
+                                              //   'cordinates': []
+                                              // }
+                                            };
+                                            _networkHandler
+                                                .postReq(
+                                                    "/shop/profileadd", data)
+                                                .then((res) => {
+                                                      if (res == 200 ||
+                                                          res == 201)
+                                                        {
+                                                          // buildFlash(context,
+                                                          //     'Data successfully added')
+                                                          _networkHandler
+                                                              .patchImage(
+                                                                  "/shop/upload/image",
+                                                                  image.path,
+                                                                  widget.mail,
+                                                                  'profile')
+                                                              .catchError((e) =>
+                                                                  {
+                                                                    buildFlash(
+                                                                        context,
+                                                                        e)
+                                                                  })
+                                                        }
+                                                    })
+                                                .catchError((err) =>
+                                                    {buildFlash(context, err)});
+                                          }
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        },
+                                        child: isLoading
+                                            ? CircularProgressIndicator(
+                                                color: Colors.white,
+                                              )
+                                            : Text('Save'));
+                                  },
+                                ),
+
+                                // ElevatedButton(
+                                //     style: ElevatedButton.styleFrom(
+                                //       maximumSize: Size(150, 50),
+                                //       minimumSize: Size(150, 50),
+                                //       primary: primaryBlack,
+                                //       onPrimary: Colors.white,
+                                //       shape: RoundedRectangleBorder(
+                                //           borderRadius:
+                                //               BorderRadius.circular(15)),
+                                //     ),
+                                //     onPressed: () {
+                                //       if (storeProfileKey!.currentState!
+                                //           .validate()) {
+                                //         String mail = getMail() as String;
+                                //         _networkHandler.postReq(
+                                //             "/profileupdate", {
+                                //           'mail': mail
+                                //         }).then((res) => {
+                                //               if (res == 200 || res == 201)
+                                //                 {
+                                //                   _networkHandler.patchImage(
+                                //                       "/upload/image", _image.path,mail)
+                                //                 }
+                                //             });
+                                //       }
+                                //     },
+                                //     child: Text('Save')),
                               ],
                             ),
                           ),
@@ -200,11 +277,5 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
             ),
           ),
         ));
-  }
-
-  Future<String?> getMail() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? mail = await pref.getString('mail');
-    return mail;
   }
 }

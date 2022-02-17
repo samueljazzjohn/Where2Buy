@@ -114,10 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               side:
                                   BorderSide(width: 1, color: Colors.black54)),
                           onPressed: () {
+                            setState(() {
+                              isLoading = true;
+                            });
                             if (loginFormKey!.currentState!.validate()) {
-                              setState(() {
-                                isLoading = true;
-                              });
                               Map<String, dynamic> data = {
                                 'email': _userController.text,
                                 'password': _pasController.text,
