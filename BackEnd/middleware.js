@@ -1,24 +1,32 @@
 const jwt = require('jsonwebtoken');
 
 let authenticateToken = (req, res, next) => {
-    let token = req.headers['Authorization']
+    console.log("inside jwt",req)
+    let token =req.headers['authorization'];
     console.log(token)
-    token = token.split(7,token.length)
+    console.log("key",process.env.JWT_SECRET_KEY)
+    if(!token){
+        return res.status(403).send("A token is required for authentication");
+    }
+    // token = token.split(7,token.length)
 
     if (token == null) return res.sendStatus(401)
-    if(token){
-        jwt.verify(token, process.env.TOKEN_SECRET, (err,user) => {
-            console.log(err)
-    
-            if (err) {
-                console.log(err)
-                return res.sendStatus(403)
-            } 
-            console.log(user)
-            req.user = user
-        })
+    try{
+        if(token){
+            jwt.verify(token, process.env.JWT_SECRET_KEY, (err,user) => {
+                if (err) {
+                    console.log(err)
+                    return res.sendStatus(403)
+                } 
+                console.log(JSON.stringify(user))
+                req.user = user
+            })
+        }
+    }catch (err) {
+        return res.status(401).send("Invalid Token");
     }
-    next()
+    
+    next();
 }
 
 module.exports = {'athenticateToken':authenticateToken}
