@@ -12,6 +12,9 @@ const middleware = require('../middleware')
 const uploadHelper = require('../Helpers/upload-helper');
 const ProductModel = require('../models/product-model');
 const productHelper = require('../Helpers/product-helper');
+const shopModel = require('../models/shop-model');
+// const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
 
 
 dotenv.config()
@@ -19,7 +22,12 @@ dotenv.config()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/')
+    console.log(reg.file)
+    if(req.file.fieldname['type']=='profile'){
+      cb(null, 'uploads/profiles')
+    }else{
+      cb(null, 'uploads/products')
+    }
   },
   filename: (req, file, cb) => {
     console.log(req.body)
@@ -38,97 +46,122 @@ const upload = multer({
 })
 
 
-//  Getting shop details
-router.get('/', middleware.athenticateToken, async (req, res, next) => {
-  console.log(req.user)
-  ShopModel.find({})
-    .select("location place category phone _id")
-    .populate('user')
-    .exec()
-    .then(data => {
-      if (!data) {
-        return res.status(404).json({
-          message: "Order not found"
-        });
-      } else {
-        res.status(200).json({
-          data: data
-        })
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-})
-
 // Getting the store profile data
-router.get('/profiledata',  async (req, res, next) => {
-  console.log(req.user)
-  var UserId;
-  userHelper.getUserId(req.body.mail).then((userId)=>{
-    UserId=userId;
-    if(UserId==null){
-      return res.status(403).json({
-        message:"no data found"
-      })
-    }
-    if(!userId){
-      return res.status(404).json({
-        message: "Product not found"
-      });
-    }
-    ShopModel.findOne({user:UserId},(data)=>{
-      return res.status(200).json({
-        phone:data.phone,
-        place:data.place,
-        shopImg:data.shopImg
-      })
-    }).catch(err => {
-      console.log(err);
-      res.status(500).json({
-        message: err.Message
-      });
-    });
-  });
+router.get('/profiledata', middleware.athenticateToken,  async (req, res) => {
+  console.log("inside",req.user)
+
+  const data=await ShopModel.findOne({user:mongoose.Types.ObjectId(req.user.userId)})
+  .select('phone place shopImg').exec()
+
+  if(data==null){
+    return res.status(401).json({
+      message:"no data found"
+    })
+  }
+    return res.status(200).json({
+      'phone':data.phone,
+      'place':data.place,
+      // 'shopImg':data.shopImg
+    }) 
 })
 
 // Update shopimage
 router.patch('/upload/image', upload.single('imagefile'), async (req, res, next) => {
   console.log(req.file)
   console.log(req.body.mail)
+  var userId=userHelper.getUserId(req.file.fields['mail'])
   if (req.fileValidationError) {
     return res.send(req.fileValidationError)
   } else {
-    ShopModel.updateOne({})
-  }
+    let doc = await ShopModel.findOneAndUpdate({user:userId},{shopImg:req.file.path})
+    await doc.save((err)=>{
+      return res.status(502).json({
+        error: err
+      });
+  })
+  return res.status(200).json({
+    message:'success'
+  })
+ }
 });
 
 
 
 
-// Updating
-router.post('/profileupdate', middleware.athenticateToken, async function (req, res, next) {
-  console.log(req.user)
+// Updating profile data
+
+// router.post('/profileupdate', async function (req, res, next) {
+//   console.log(req.body)
+//   await userHelper.getUserId(req.body.mail).then((userId) => {
+//     console.log(userId)
+//     var data = UserModel.findOne({user:UserId});
+//       if (!userId) {
+//       return res.status(404).json({
+//         message: "user not found"
+//       });
+//     }
+//     let doc=await ShopModel.findOneAndUpdate({user:userId},{
+//       "$set":{
+//         "phone":req.body.phone,
+//         "place":req.body.place,
+//         "category":req.body.category,
+//       }
+//     })
+    // await doc.save((err)=>{
+    //   return res.status(502).json({
+    //     error: err
+    //   });
+
+//   }).catch(err => {
+//     console.log(err);
+//     res.status(501).json({
+//       error: "Error occured"
+//     });
+//   });
+// });
+
+
+// Adding profile data
+router.post('/profileadd', async function (req, res, next) {
+  console.log(req.body)
   await userHelper.getUserId(req.body.mail).then((userId) => {
     console.log(userId)
-    if (!userId) {
+    var data = ShopModel.findOne({user:UserId});
+    if(data){
+      return res.status(402).json({
+        message:"Data already added"
+      })
+      // res.redirect(url.format({
+      //   pathname:"/profileupdate",
+      //   query:req.body,
+      // }));
+    }
+    else{
+      if (!userId) {
       return res.status(404).json({
-        message: "Product not found"
+        message: "user not found"
       });
     }
     const shop = new ShopModel({
       phone: req.body.phone,
       place:req.body.place,
       category:req.body.category,
-      location: req.body.location,
+      // location: {
+      //     'type': 'Point',
+      //     'coordinates': []
+      //   },
       user: userId
     })
     return shop.save((err) => {
-      if (err) throw err;
+      if (err) res.status(502).json({
+        error: err
+      });
     })
+  }
   }).catch(err => {
     console.log(err);
-    res.status(500).json({
-      error: err
+    res.status(501).json({
+      error: "Error occured"
     });
   });
   
@@ -140,7 +173,7 @@ router.post('/profileupdate', middleware.athenticateToken, async function (req, 
 
 // Add product details
 router.post('/product/add', middleware.athenticateToken, async function (req, res, next) {
-  userHelper.getUserId(req.body.mail).then((userId) => {
+  userHelper.getUserId(req.user.mail).then((userId) => {
     productHelper.getShopId(userId).then((shopId) => {
       const product = new ProductModel({
         pname: req.body.pname,
