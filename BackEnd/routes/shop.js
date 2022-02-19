@@ -185,6 +185,7 @@ router.post('/product/add', middleware.athenticateToken, async function (req, re
         pname: req.body.pname,
         price: req.body.price,
         qty: req.body.qty,
+        Image:" ",
         store: shopId
       })
       return product.save((err) => {
@@ -195,6 +196,27 @@ router.post('/product/add', middleware.athenticateToken, async function (req, re
         })
       })
 })
+
+// product image update
+
+router.patch('/product/image/update',middleware.athenticateToken, upload.single('imagefile'), async (req, res, next) => {
+  console.log(req.file)
+  console.log(req.user.mail)
+  var userId=userHelper.getUserId(req.file.fields['mail'])
+  if (req.fileValidationError) {
+    return res.send(req.fileValidationError)
+  } else {
+    let doc = await ShopModel.findOneAndUpdate({user:userId},{shopImg:req.file.path})
+    await doc.save((err)=>{
+      return res.status(502).json({
+        error: err
+      });
+  })
+  return res.status(200).json({
+    message:'success'
+  })
+ }
+});
 
 
 // update Product

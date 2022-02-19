@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 
 let authenticateToken = (req, res, next) => {
-    console.log("inside jwt",req)
-    // let token =req.headers['authorization'];
+    console.log("______________inside jwt",req)
+    let token =req.headers['authorization'].split(' ')[1];
     // let token = req.headers.authorization.split(' ')[1];
-    let token=req.headers('Authorization');
-    console.log(token)
-    console.log("key",process.env.JWT_SECRET_KEY)
+    // let token=req.headers('Authorization');
+    console.log("__________________",token)
+    console.log("_______________key",process.env.JWT_SECRET_KEY)
     if(!token){
         return res.status(403).send("A token is required for authentication");
     }
