@@ -173,8 +173,14 @@ router.post('/profileadd', async function (req, res, next) {
 
 // Add product details
 router.post('/product/add', middleware.athenticateToken, async function (req, res, next) {
-  userHelper.getUserId(req.user.mail).then((userId) => {
-    productHelper.getShopId(userId).then((shopId) => {
+  // userHelper.getUserId(req.user.mail).then((userId) => {
+    console.log(".......",req.user.userId)
+    const shopId=await productHelper.getShopId(req.user.userId)
+    if(!shopId || shopId==null){
+      res.status(401).json({
+        message:"Shop id retrieval error"
+      })
+    }
       const product = new ProductModel({
         pname: req.body.pname,
         price: req.body.price,
@@ -184,20 +190,11 @@ router.post('/product/add', middleware.athenticateToken, async function (req, re
       return product.save((err) => {
         if (err) throw err;
         console.log('Product details added')
+        res.status(200).json({
+          message:"product added successfully"
+        })
       })
-    }).catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
-    });
-  }).catch(err => {
-    console.log(err);
-    res.status(500).json({
-      error: err
-    });
-  });
-});
+})
 
 
 // update Product
