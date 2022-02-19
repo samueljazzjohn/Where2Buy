@@ -22,12 +22,14 @@ dotenv.config()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log(reg.file)
-    if(req.file.fieldname['type']=='profile'){
-      cb(null, 'uploads/profiles')
-    }else{
-      cb(null, 'uploads/products')
-    }
+    console.log('________',file)
+    console.log('_________',file.fieldname);
+    // if(file.fieldname['type']=='profile'){
+    //   cb(null, 'uploads/profiles')
+    // }else{
+    //   cb(null, 'uploads/products')
+    // }
+    cb(null, 'uploads/')
   },
   filename: (req, file, cb) => {
     console.log(req.body)
@@ -66,14 +68,15 @@ router.get('/profiledata', middleware.athenticateToken,  async (req, res) => {
 })
 
 // Update shopimage
-router.patch('/upload/image', upload.single('imagefile'), async (req, res, next) => {
+router.patch('/upload/image',middleware.athenticateToken, upload.single(''), async (req, res, next) => {
   console.log(req.file)
-  console.log(req.body.mail)
-  var userId=userHelper.getUserId(req.file.fields['mail'])
+  console.log(req.user.mail)
+  var userId=userHelper.getUserId(req.user.mail)
+  console.log(userId)
   if (req.fileValidationError) {
     return res.send(req.fileValidationError)
   } else {
-    let doc = await ShopModel.findOneAndUpdate({user:userId},{shopImg:req.file.path})
+    let doc = await ShopModel.findOneAndUpdate({user:mongoose.Types.ObjectId(userId)},{shopImg:req.file.path}).exec()
     await doc.save((err)=>{
       return res.status(502).json({
         error: err
@@ -126,7 +129,7 @@ router.post('/profileadd', async function (req, res, next) {
   console.log(req.body)
   await userHelper.getUserId(req.body.mail).then((userId) => {
     console.log(userId)
-    var data = ShopModel.findOne({user:UserId});
+    var data = ShopModel.findOne({user:userId});
     if(data){
       return res.status(402).json({
         message:"Data already added"
@@ -202,18 +205,23 @@ router.post('/product/add', middleware.athenticateToken, async function (req, re
 router.patch('/product/image/update',middleware.athenticateToken, upload.single('imagefile'), async (req, res, next) => {
   console.log(req.file)
   console.log(req.user.mail)
-  var userId=userHelper.getUserId(req.file.fields['mail'])
+  var userId=await userHelper.getUserId(req.user.mail)
+  console.log('userid______',userId)
+  var shopId=await productHelper.getShopId(userId)
+  console.log('shopid_____',shopId._id)
   if (req.fileValidationError) {
-    return res.send(req.fileValidationError)
+    return res.status(401).json({
+      err:req.fileValidationError
+    })
   } else {
-    let doc = await ShopModel.findOneAndUpdate({user:userId},{shopImg:req.file.path})
+    let doc = await ProductModel.findOneAndUpdate({store:shopId._id},{Image:req.file.path}).exec()
     await doc.save((err)=>{
-      return res.status(502).json({
+      if (err) return res.status(502).json({
         error: err
       });
-  })
-  return res.status(200).json({
-    message:'success'
+      return res.status(200).json({
+        message:'success'
+      })
   })
  }
 });
