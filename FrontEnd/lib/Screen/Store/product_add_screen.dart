@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:where2buy/Components/config.dart';
 import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Screen/Store/store_home_screen.dart';
+import 'package:where2buy/Screen/login_screen.dart';
 import 'package:where2buy/Widgets/add_button.dart';
 import 'package:where2buy/Widgets/button.dart';
 import 'package:where2buy/Widgets/flash.dart';
@@ -16,16 +19,16 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  GlobalKey<FormState> productFormKey = GlobalKey<FormState>();
+  static final productFormKey = GlobalKey<FormState>();
+  TextEditingController _pname = TextEditingController();
+  TextEditingController _price = TextEditingController();
+  TextEditingController _quantity = TextEditingController();
+  TextEditingController _status = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    TextEditingController _pname = TextEditingController();
-    TextEditingController _price = TextEditingController();
-    TextEditingController _quantity = TextEditingController();
-    TextEditingController _status = TextEditingController();
-    bool isLoading = false;
     NetworkHandler _networkHandler = NetworkHandler(ctx: context);
 
     return Scaffold(
@@ -84,9 +87,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             if (productFormKey.currentState!.validate()) {
                               Map<String, dynamic> data = {
                                 'pname': _pname.text,
-                                'qty': _quantity.value,
-                                'price': _price.value,
+                                'qty': _quantity.text,
+                                'price': _price.text,
                               };
+                              // final body = jsonEncode(data);
+                              print(data);
                               _networkHandler
                                   .postReq('/shop/product/add', data)
                                   .then((res) => {
@@ -100,17 +105,28 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                               return StoreHomeScreen(
                                                   type: 'store');
                                             })))
+                                          },
+                                        if (res.body == 'Forbidden')
+                                          {
+                                            buildFlash(
+                                                context, "jwt malformed"),
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: ((context) {
+                                              return LoginScreen(type: 'store');
+                                            })))
                                           }
                                       })
-                                  .catchError(
-                                      (err) => {buildFlash(context, err)});
+                                  .catchError((err) => {
+                                        {buildFlash(context, err.toString())},
+                                      });
                             }
                           },
                           child: isLoading
                               ? CircularProgressIndicator(
                                   color: Colors.white,
                                 )
-                              : Text('Login')),
+                              : Text('Add')),
                     ])))
               ],
             ),

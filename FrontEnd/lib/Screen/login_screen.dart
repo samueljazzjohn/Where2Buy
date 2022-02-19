@@ -189,27 +189,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           )),
 
-                      ColumnDiveder(),
+                      // ColumnDiveder(),
 
-                      const SizedBox(height: 15),
+                      // const SizedBox(height: 15),
 
-                      Container(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                              onTap: () => print('google'),
-                              child:
-                                  CircularAvatarWithBorder(assetName: google)),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          InkWell(
-                              onTap: () => print('facebook'),
-                              child:
-                                  CircularAvatarWithBorder(assetName: facebook))
-                        ],
-                      )),
+                      // Container(
+                      //     child: Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     InkWell(
+                      //         onTap: () => print('google'),
+                      //         child:
+                      //             CircularAvatarWithBorder(assetName: google)),
+                      //     SizedBox(
+                      //       width: 15,
+                      //     ),
+                      //     InkWell(
+                      //         onTap: () => print('facebook'),
+                      //         child:
+                      //             CircularAvatarWithBorder(assetName: facebook))
+                      //   ],
+                      // )),
                       SizedBox(height: 2),
                     ],
                   ),

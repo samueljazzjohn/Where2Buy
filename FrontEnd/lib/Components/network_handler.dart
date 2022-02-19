@@ -38,6 +38,7 @@ class NetworkHandler {
     } catch (e) {
       throw "Something went wrong...please try again later!!!";
     }
+    print(response.body);
     return response;
   }
 
@@ -47,10 +48,10 @@ class NetworkHandler {
     try {
       response = await http
           .post(Uri.parse(url),
-              // headers: {
-              //   "Content-type": "application/json",
-              //   "Authorization": "Bearer $token"
-              // },
+              headers: {
+                // "Content-type": "application/json",
+                "Authorization": "Bearer $token"
+              },
               body: body)
           .timeout(Duration(seconds: 75));
       print("response:${response.statusCode}");
@@ -62,8 +63,10 @@ class NetworkHandler {
       print("timeouterror");
       throw "Server not responding..please try again later!!!";
     } catch (e) {
-      throw "Something went wrong...please try again later!!!";
+      return Future.error(e);
+      // throw "Something went wrong...please try again later!!!";
     }
+    print(response.body);
     return response;
   }
 

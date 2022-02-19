@@ -7,6 +7,7 @@ class InputField extends StatefulWidget {
   final String? labelText;
   final bool isPass;
   final bool isMail;
+  final bool isNumber;
   final IconData? textfieldIcon;
   const InputField(
       {Key? key,
@@ -15,6 +16,7 @@ class InputField extends StatefulWidget {
       this.textfieldIcon,
       this.labelText,
       this.isMail = false,
+      this.isNumber = false,
       this.isPass = false})
       : super(key: key);
 
@@ -51,6 +53,11 @@ class _InputFieldState extends State<InputField> {
             // }
           },
           controller: widget.controller,
+          // keyboardType: widget.isMail
+          //     ? TextInputType.emailAddress
+          //     : widget.isNumber
+          //         ? TextInputType.number
+          //         : TextInputType.text,
           cursorColor: Colors.black54,
           obscureText: widget.isPass ? _isObscure! : false,
           textAlign: TextAlign.center,
