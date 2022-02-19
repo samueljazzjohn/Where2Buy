@@ -14,15 +14,16 @@ class NetworkHandler {
   String baseUrl = 'https://where2buy-2022.herokuapp.com';
   // String baseUrl = 'http://127.0.0.1:55981';
   var log = Logger();
-  var token = getToken();
 
   Future<http.Response> getReq(String url, Map<String, String> data) async {
     url = formatter(url);
+    String token = await getToken();
     var response = await http.get(
       Uri.parse(url),
       headers: {
         "Content-type": "application/json",
         "Authorization": "Bearer $token"
+        // "Authorization": token
       },
     );
     try {
@@ -42,15 +43,17 @@ class NetworkHandler {
     return response;
   }
 
-  Future<http.Response> postReq(String url, Map<String, dynamic> body) async {
+  Future<http.Response> postReq(String url, String body) async {
     url = formatter(url);
     http.Response response;
+    String token = await getToken();
     try {
       response = await http
           .post(Uri.parse(url),
               headers: {
-                // "Content-type": "application/json",
-                "Authorization": "Bearer $token"
+                "Content-type": 'application/json',
+                "Authorization": "Bearer $token".toString()
+                // "Authorization": '$token'
               },
               body: body)
           .timeout(Duration(seconds: 75));
@@ -71,7 +74,7 @@ class NetworkHandler {
   }
 
   Future<http.StreamedResponse> patchImage(
-      String url, String filepath, String mail, String type) async {
+      String url, String filepath, String type) async {
     url = formatter(url);
     try {
       var request = http.MultipartRequest('PATCH', Uri.parse(url));
@@ -79,7 +82,6 @@ class NetworkHandler {
       request.headers.addAll({
         "Content-type": "multipart/form-data",
       });
-      request.fields['mail'] = mail;
       request.fields['type'] = type;
       var response = request.send();
       log.i(response);

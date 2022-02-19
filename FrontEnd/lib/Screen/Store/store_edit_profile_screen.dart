@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -201,9 +202,10 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                                               //   'cordinates': []
                                               // }
                                             };
+                                            final body = jsonEncode(data);
                                             _networkHandler
                                                 .postReq(
-                                                    "/shop/profileadd", data)
+                                                    "/shop/profileadd", body)
                                                 .then((res) => {
                                                       if (res == 200 ||
                                                           res == 201)
@@ -214,7 +216,6 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                                                               .patchImage(
                                                                   "/shop/upload/image",
                                                                   image.path,
-                                                                  widget.mail,
                                                                   'profile')
                                                               .catchError((e) =>
                                                                   {

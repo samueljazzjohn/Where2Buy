@@ -30,10 +30,8 @@ class Button extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             side: BorderSide(width: 1, color: Colors.black54)),
         onPressed: () {
-          
           isNext
-              ? Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) {
+              ? Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return nextScreen!;
                 }))
               : onClick;

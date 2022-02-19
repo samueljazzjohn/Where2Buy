@@ -123,9 +123,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'password': _pasController.text,
                                 'type': widget.type
                               };
+                              final body = jsonEncode(data);
                               // try {
                               net = NetworkHandler(ctx: context);
-                              net.postReq("/login", data).then((res) {
+                              net.postReq("/login", body).then((res) {
                                 var decode = json.decode(res.body);
                                 print("res=$decode");
                                 setState(() {

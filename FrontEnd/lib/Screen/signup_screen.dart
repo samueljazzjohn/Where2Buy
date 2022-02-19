@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Screen/login_screen.dart';
@@ -101,8 +103,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                     'type': widget.type
                                   };
                                   print(data);
+                                  final body = jsonEncode(data);
                                   net = NetworkHandler(ctx: context);
-                                  net.postReq("/signup", data).then((res) {
+                                  net.postReq("/signup", body).then((res) {
                                     print("Signup res $res");
                                     res.statusCode == 200 ||
                                             res.statusCode == 201

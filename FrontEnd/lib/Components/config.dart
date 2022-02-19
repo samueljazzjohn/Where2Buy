@@ -17,7 +17,6 @@ String shoppingBag = 'assets/logo/shopping-bag.png';
 String login = 'assets/logo/login.png';
 String signUp = 'assets/logo/sign-up.png';
 
-
 //  AssetsIcons
 
 String menu = 'assets/icons/menu-4-fill.svg';
@@ -31,14 +30,10 @@ String setLocation = 'assets/icons/focus-3-line.svg';
 String add = 'assets/icons/add-box-line.svg';
 String addImage = 'assets/icons/image-add-line.svg';
 
-
-
-
 //assetProfilePic
 
 String profile = 'assets/images/profile/sampic.jpg';
 
-
 // assetProducts
 
-String dummy = 'assets/images/products/dummy.png';
+String dummy = '/assets/images/products/dummy.png';
