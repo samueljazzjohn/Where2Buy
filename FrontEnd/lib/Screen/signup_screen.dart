@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Screen/login_screen.dart';
 import 'package:where2buy/Widgets/button.dart';
+import 'package:where2buy/Widgets/flash.dart';
 import 'package:where2buy/Widgets/text_field.dart';
 import 'package:where2buy/Components/config.dart';
 
@@ -105,7 +106,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   print(data);
                                   final body = jsonEncode(data);
                                   net = NetworkHandler(ctx: context);
-                                  net.postReq("/signup", body).then((res) {
+                                  net.postReqLogSignup("/signup", body).then(
+                                      (res) {
                                     print("Signup res $res");
                                     res.statusCode == 200 ||
                                             res.statusCode == 201
@@ -116,7 +118,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 type: widget.type);
                                           }))
                                         : print('error');
-                                  });
+                                  }).catchError((err) =>
+                                      {buildFlash(context, err.toString())});
                                 }
                               },
                               child: Text('Signup')),

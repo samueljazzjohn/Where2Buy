@@ -40,7 +40,6 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
     'Super Market',
     'Grocery Shop',
     'Cosmetic Shop',
-    'Book Store',
     'Electronic Shop',
     'others'
   ];

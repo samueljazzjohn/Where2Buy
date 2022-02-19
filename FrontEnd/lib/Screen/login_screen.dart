@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               final body = jsonEncode(data);
                               // try {
                               net = NetworkHandler(ctx: context);
-                              net.postReq("/login", body).then((res) {
+                              net.postReqLogSignup("/login", body).then((res) {
                                 var decode = json.decode(res.body);
                                 print("res=$decode");
                                 setState(() {
@@ -136,8 +136,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? LoginNavigate(widget.type, _userModel!)
                                     : buildFlash(context,
                                         "Username or password incorrect");
-                              }).catchError(
-                                  (err) => {buildFlash(context, err)});
+                              }).catchError((err) =>
+                                  {buildFlash(context, err.toString())});
 
                               setState(() {
                                 isLoading = false;

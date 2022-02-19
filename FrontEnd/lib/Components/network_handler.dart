@@ -73,6 +73,33 @@ class NetworkHandler {
     return response;
   }
 
+  Future<http.Response> postReqLogSignup(String url, String body) async {
+    url = formatter(url);
+    http.Response response;
+    try {
+      response = await http
+          .post(Uri.parse(url),
+              headers: {
+                "Content-type": 'application/json',
+              },
+              body: body)
+          .timeout(Duration(seconds: 75));
+      print("response:${response.statusCode}");
+      log.i(response.body);
+    } on SocketException catch (e) {
+      print("Socket exception:${e.message}");
+      throw "Internet not connected!!!";
+    } on TimeoutException catch (e) {
+      print("timeouterror");
+      throw "Server not responding..please try again later!!!";
+    } catch (e) {
+      return Future.error(e);
+      // throw "Something went wrong...please try again later!!!";
+    }
+    print(response.body);
+    return response;
+  }
+
   Future<http.StreamedResponse> patchImage(
       String url, String filepath, String type) async {
     url = formatter(url);
