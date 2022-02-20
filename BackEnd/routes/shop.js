@@ -15,6 +15,7 @@ const productHelper = require('../Helpers/product-helper');
 const shopModel = require('../models/shop-model');
 // const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
+const { ifError } = require('assert');
 
 
 dotenv.config()
@@ -22,8 +23,8 @@ dotenv.config()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log('________',file)
-    console.log('_________',file.fieldname);
+    console.log('________', file)
+    console.log('_________', file.fieldname);
     // if(file.fieldname['type']=='profile'){
     //   cb(null, 'uploads/profiles')
     // }else{
@@ -49,43 +50,43 @@ const upload = multer({
 
 
 // Getting the store profile data
-router.get('/profiledata', middleware.athenticateToken,  async (req, res) => {
-  console.log("inside",req.user)
+router.get('/profiledata', middleware.athenticateToken, async (req, res) => {
+  console.log("inside", req.user)
 
-  const data=await ShopModel.findOne({user:mongoose.Types.ObjectId(req.user.userId)})
-  .select('phone place shopImg').exec()
+  const data = await ShopModel.findOne({ user: mongoose.Types.ObjectId(req.user.userId) })
+    .select('phone place shopImg').exec()
 
-  if(data==null){
+  if (data == null) {
     return res.status(401).json({
-      message:"no data found"
+      message: "no data found"
     })
   }
-    return res.status(200).json({
-      'phone':data.phone,
-      'place':data.place,
-      // 'shopImg':data.shopImg
-    }) 
+  return res.status(200).json({
+    'phone': data.phone,
+    'place': data.place,
+    // 'shopImg':data.shopImg
+  })
 })
 
 // Update shopimage
-router.patch('/upload/image',middleware.athenticateToken, upload.single(''), async (req, res, next) => {
+router.patch('/upload/image', middleware.athenticateToken, upload.single(''), async (req, res, next) => {
   console.log(req.file)
   console.log(req.user.mail)
-  var userId=userHelper.getUserId(req.user.mail)
+  var userId = userHelper.getUserId(req.user.mail)
   console.log(userId)
   if (req.fileValidationError) {
     return res.send(req.fileValidationError)
   } else {
-    let doc = await ShopModel.findOneAndUpdate({user:mongoose.Types.ObjectId(userId)},{shopImg:req.file.path}).exec()
-    await doc.save((err)=>{
+    let doc = await ShopModel.findOneAndUpdate({ user: mongoose.Types.ObjectId(userId) }, { shopImg: req.file.path }).exec()
+    await doc.save((err) => {
       return res.status(502).json({
         error: err
       });
-  })
-  return res.status(200).json({
-    message:'success'
-  })
- }
+    })
+    return res.status(200).json({
+      message: 'success'
+    })
+  }
 });
 
 
@@ -110,10 +111,10 @@ router.patch('/upload/image',middleware.athenticateToken, upload.single(''), asy
 //         "category":req.body.category,
 //       }
 //     })
-    // await doc.save((err)=>{
-    //   return res.status(502).json({
-    //     error: err
-    //   });
+// await doc.save((err)=>{
+//   return res.status(502).json({
+//     error: err
+//   });
 
 //   }).catch(err => {
 //     console.log(err);
@@ -125,49 +126,45 @@ router.patch('/upload/image',middleware.athenticateToken, upload.single(''), asy
 
 
 // Adding profile data
-router.post('/profileadd', async function (req, res, next) {
+router.post('/profileadd', middleware.athenticateToken, async function (req, res, next) {
   console.log(req.body)
-  await userHelper.getUserId(req.body.mail).then((userId) => {
-    console.log(userId)
-    var data = ShopModel.findOne({user:userId});
-    if(data){
-      return res.status(402).json({
-        message:"Data already added"
-      })
-      // res.redirect(url.format({
-      //   pathname:"/profileupdate",
-      //   query:req.body,
-      // }));
-    }
-    else{
-      if (!userId) {
-      return res.status(404).json({
-        message: "user not found"
-      });
-    }
-    const shop = new ShopModel({
-      phone: req.body.phone,
-      place:req.body.place,
-      category:req.body.category,
-      // location: {
-      //     'type': 'Point',
-      //     'coordinates': []
-      //   },
-      user: userId
+  // await userHelper.getUserId(req.user.mail).then((userId) => {
+  console.log(req.user.userId)
+  var data = await ShopModel.findOne({ user: mongoose.Types.ObjectId(req.user.userId) }).exec()
+  if (data != null) {
+    return res.status(402).json({
+      message: "Data already added"
     })
-    return shop.save((err) => {
-      if (err) res.status(502).json({
-        error: err
-      });
-    })
+    // res.redirect(url.format({
+    //   pathname:"/profileupdate",
+    //   query:req.body,
+    // }));
   }
-  }).catch(err => {
-    console.log(err);
-    res.status(501).json({
-      error: "Error occured"
+  const shop = new ShopModel({
+    phone: req.body.phone,
+    place: req.body.place,
+    category: req.body.category,
+    // location: {
+    //     'type': 'Point',
+    //     'coordinates': []
+    //   },
+    user: req.user.userId
+  })
+  return shop.save((err) => {
+    if (err) return res.status(503).json({
+      error: err.message
     });
-  });
-  
+    return res.status(200).json({
+      message: "success"
+    })
+  })
+  // }).catch(err => {
+  //   console.log(err);
+  //   res.status(501).json({
+  //     error: "Error occured"
+  //   });
+  // });
+
   // UserModel.updateOne({_id:UserId},{})
 
 });
@@ -177,79 +174,79 @@ router.post('/profileadd', async function (req, res, next) {
 // Add product details
 router.post('/product/add', middleware.athenticateToken, async function (req, res, next) {
   // userHelper.getUserId(req.user.mail).then((userId) => {
-    console.log(".......",req.user.userId)
-    const shopId=await productHelper.getShopId(req.user.userId)
-    if(!shopId || shopId==null){
-      res.status(401).json({
-        message:"Shop id retrieval error"
-      })
-    }
-      const product = new ProductModel({
-        pname: req.body.pname,
-        price: req.body.price,
-        qty: req.body.qty,
-        Image:" ",
-        store: shopId
-      })
-      return product.save((err) => {
-        if (err) throw err;
-        console.log('Product details added')
-        res.status(200).json({
-          message:"product added successfully"
-        })
-      })
+  console.log(".......", req.user.userId)
+  const shopId = await productHelper.getShopId(req.user.userId)
+  if (!shopId || shopId == null) {
+    res.status(401).json({
+      message: "Shop id retrieval error"
+    })
+  }
+  const product = new ProductModel({
+    pname: req.body.pname,
+    price: req.body.price,
+    qty: req.body.qty,
+    Image: " ",
+    store: shopId
+  })
+  return product.save((err) => {
+    if (err) throw err;
+    console.log('Product details added')
+    res.status(200).json({
+      message: "product added successfully"
+    })
+  })
 })
 
 // product image update
 
-router.patch('/product/image/update',middleware.athenticateToken, upload.single('imagefile'), async (req, res, next) => {
+router.patch('/product/image/update', middleware.athenticateToken, upload.single('imagefile'), async (req, res, next) => {
   console.log(req.file)
   console.log(req.user.mail)
-  var userId=await userHelper.getUserId(req.user.mail)
-  console.log('userid______',userId)
-  var shopId=await productHelper.getShopId(userId)
-  console.log('shopid_____',shopId._id)
+  var userId = await userHelper.getUserId(req.user.mail)
+  console.log('userid______', userId)
+  var shopId = await productHelper.getShopId(userId)
+  console.log('shopid_____', shopId._id)
   if (req.fileValidationError) {
     return res.status(401).json({
-      err:req.fileValidationError
+      err: req.fileValidationError
     })
   } else {
-    let doc = await ProductModel.findOneAndUpdate({store:shopId._id},{Image:req.file.path}).exec()
-    await doc.save((err)=>{
+    let doc = await ProductModel.findOneAndUpdate({ store: shopId._id }, { Image: req.file.path }).exec()
+    await doc.save((err) => {
       if (err) return res.status(502).json({
         error: err
       });
       return res.status(200).json({
-        message:'success'
+        message: 'success'
       })
-  })
- }
+    })
+  }
 });
 
 
 // update Product
-router.patch('/product/update', async (req, res, next) => {
+router.patch('/product/update', middleware.athenticateToken, async (req, res, next) => {
   userHelper.getUserId(req.body.mail).then((userId) => {
     productHelper.getShopId(userId).then((shopId) => {
       ProductModel.findOneAndUpdate({ store: shopId, pname: req.body.oldname }, { pname: req.body.pname, price: req.body.price, qty: req.body.qty }).exec()
         .then((doc) => {
           console.log(doc)
-          if(doc==null){
-            return res.status(403).json({"Message":"Update error"})
+          if (doc == null) {
+            return res.status(403).json({ "Message": "Update error" })
           }
-          res.status(200).json({"Message":"Success"})
+          res.status(200).json({ "Message": "Success" })
         })
     })
   })
 })
 
 // Delete Product
-router.delete('/product/delete', async (req, res, next) => {
+router.delete('/product/delete', middleware.athenticateToken, async (req, res, next) => {
   userHelper.getUserId(req.body.mail).then((userId) => {
     productHelper.getShopId(userId).then((shopId) => {
-      ProductModel.remove({store:shopId,pname:req.body.pname},(err)=>{
-        if(!err) return res.status(200).json({"Messsage":"Deleted successfully"});
-        res.status(400).json({"Message":err})
+      ProductModel.remove({ store: shopId, pname: req.body.pname }, (err) => {
+        if (!err) return res.status(200).json({ "Messsage": "Deleted successfully" });
+        res.status(400).json({ "Message": err })
       })
     })
   })
@@ -257,21 +254,18 @@ router.delete('/product/delete', async (req, res, next) => {
 })
 
 // Getting product Details
-router.get('/product/get', async (req, res, next) => {
-  userHelper.getUserId(req.body.mail).then((userId) => {
-    productHelper.getShopId(userId).then((shopId) => {
-      ProductModel.find({store:shopId}).exec()
-        .then((doc) => {
-          console.log(doc)
-          if(doc==null){
-            return res.status(403).json({"Message":"error"})
-          }
-          res.status(200).json({
-            "data":doc,
-            "Message":"Success"
-          })
-        })
-    })
+router.get('/product/get', middleware.athenticateToken, async (req, res, next) => {
+  // userHelper.getUserId(req.body.mail).then((userId) => {
+  console.log(req.user)
+  var shopId = await productHelper.getShopId(mongoose.Types.ObjectId(req.user.userId))
+  console.log('___', shopId)
+  const doc = await ProductModel.find({ store: shopId }).select('-_id pname qty price Image').exec()
+  console.log(doc)
+  if (!doc || doc == null) {
+    return res.status(403).json({ "Message": "error" })
+  }
+  return res.status(200).json({
+    "data": doc
   })
 })
 
