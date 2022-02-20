@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Components/product_list.dart';
 import 'package:where2buy/Components/config.dart';
 import 'package:where2buy/Screen/Store/product_add_screen.dart';
@@ -22,6 +23,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NetworkHandler _networkHandler = NetworkHandler(ctx: context);
     return AnimatedContainer(
       duration: Duration(milliseconds: 250),
       // transform:
@@ -35,8 +37,10 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15)),
-                child: Image.asset(storeImage,
+                child: Image.network(_networkHandler.getImage(storeImage).url,
                     width: size.width * 0.4, height: 110, fit: BoxFit.cover)),
+            // Image.asset(storeImage,
+            //     width: size.width * 0.4, height: 110, fit: BoxFit.cover)),
             Container(
                 width: size.width * 0.4,
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
@@ -79,9 +83,12 @@ class ProductCard extends StatelessWidget {
                   onSelected: (choice) {
                     switch (choice) {
                       case 1:
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                          AddProductScreen(type: type,)
-                        ));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddProductScreen(
+                                      type: type,
+                                    )));
                         break;
                       case 2:
                         for (int i = 0; i < productList.length; i++) {

@@ -26,13 +26,13 @@ class _StoreProfileState extends State<StoreProfile> {
   StoreProfileModel? _storeProfileModel;
   late NetworkHandler _networkHandler;
 
-  Future<List<StoreProfileModel>> getStoreDetails(BuildContext ctx) async {
+  Future<StoreProfileModel> getStoreDetails(BuildContext ctx) async {
     _networkHandler = NetworkHandler(ctx: context);
-    Response res = await _networkHandler
-        .getReq('/shop/profiledata', {'mail': widget.email});
+    Response res = await _networkHandler.getReq('/shop/profiledata');
     var decode = json.decode(res.body);
     _storeProfileModel = StoreProfileModel.fromJson(decode);
-    return decode.map<StoreProfileModel>(_storeProfileModel).toList();
+    return _storeProfileModel!;
+    // return decode.map<StoreProfileModel>(_storeProfileModel).toList();
   }
 
   // @override
@@ -92,9 +92,10 @@ class _StoreProfileState extends State<StoreProfile> {
                 iconName: Icons.mail_outline,
                 isLeading: true,
                 ctx: context),
-            FutureBuilder(
+            FutureBuilder<StoreProfileModel>(
                 future: getStoreDetails(context),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  print(snapshot.data);
                   if (snapshot.data == null) {
                     return Container(
                       child: SizedBox(),
@@ -102,12 +103,12 @@ class _StoreProfileState extends State<StoreProfile> {
                   } else {
                     return Column(children: [
                       buildListTile(
-                          name: _storeProfileModel!.phone,
+                          name: snapshot.data!.phone,
                           iconName: Icons.phone,
                           isLeading: true,
                           ctx: context),
                       buildListTile(
-                          name: _storeProfileModel!.place,
+                          name: snapshot.data!.place,
                           iconName: Icons.location_on,
                           isLeading: true,
                           ctx: context),
@@ -128,6 +129,7 @@ class _StoreProfileState extends State<StoreProfile> {
                 name: 'Logout',
                 iconName: Icons.logout,
                 isLeading: false,
+                isLoggout: true,
                 nextScreen: TypeScreen())
           ])
         ]),
@@ -140,18 +142,26 @@ class _StoreProfileState extends State<StoreProfile> {
       required String name,
       required IconData iconName,
       required bool isLeading,
+      bool isLoggout = false,
       Widget? nextScreen}) {
     return ListTile(
-      trailing: Icon(iconName, color: Colors.grey[400]),
-      title: Text(
-        name,
-        style: TextStyle(color: Colors.grey[400]),
-      ),
-      // trailing : !isLeading ? Icon(iconName,color:Colors.grey[400]):SizedBox(),
-      onTap: () => !isLeading
-          ? Navigator.push(
-              ctx, MaterialPageRoute(builder: (ctx) => nextScreen!))
-          : print('no action'),
-    );
+        trailing: Icon(iconName, color: Colors.grey[400]),
+        title: Text(
+          name,
+          style: TextStyle(color: Colors.grey[400]),
+        ),
+        // trailing : !isLeading ? Icon(iconName,color:Colors.grey[400]):SizedBox(),
+        onTap: () => {
+              isLoggout ? removeData() : print('continue'),
+              !isLeading
+                  ? Navigator.push(
+                      ctx, MaterialPageRoute(builder: (ctx) => nextScreen!))
+                  : print('no action'),
+            });
+  }
+
+  Future<void> removeData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
   }
 }

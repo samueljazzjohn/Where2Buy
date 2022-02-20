@@ -209,19 +209,20 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
                                                       if (res == 200 ||
                                                           res == 201)
                                                         {
-                                                          // buildFlash(context,
-                                                          //     'Data successfully added')
-                                                          _networkHandler
-                                                              .patchImage(
-                                                                  "/shop/upload/image",
-                                                                  image.path,
-                                                                  'profile')
-                                                              .catchError((e) =>
-                                                                  {
-                                                                    buildFlash(
-                                                                        context,
-                                                                        e)
-                                                                  })
+                                                          buildFlash(context,
+                                                              'Data successfully added'),
+                                                          Navigator.pop(context)
+                                                          // _networkHandler
+                                                          //     .patchImage(
+                                                          //         "/shop/upload/image",
+                                                          //         image.path,
+                                                          //         'profile')
+                                                          //     .catchError((e) =>
+                                                          //         {
+                                                          //           buildFlash(
+                                                          //               context,
+                                                          //               e)
+                                                          //         })
                                                         }
                                                     })
                                                 .catchError((err) =>

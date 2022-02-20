@@ -15,7 +15,7 @@ class NetworkHandler {
   // String baseUrl = 'http://127.0.0.1:55981';
   var log = Logger();
 
-  Future<http.Response> getReq(String url, Map<String, String> data) async {
+  Future<http.Response> getReq(String url) async {
     url = formatter(url);
     String token = await getToken();
     var response = await http.get(
@@ -124,6 +124,11 @@ class NetworkHandler {
 
   String formatter(String url) {
     return baseUrl + url;
+  }
+
+  NetworkImage getImage(String filename) {
+    String url = formatter(filename);
+    return NetworkImage(url);
   }
 
   static getToken() async {

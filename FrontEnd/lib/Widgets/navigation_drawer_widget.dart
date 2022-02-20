@@ -118,9 +118,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => widget.type == 'user'
                         ? UserHomeScreen(
-                            type: 'store',
+                            type: 'user',
                           )
-                        : StoreHomeScreen(type: widget.type)));
+                        : StoreHomeScreen(type: 'store')));
               },
             ),
             SizedBox(height: 15),
@@ -130,7 +130,10 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => widget.type == 'user'
-                        ? UserProfile()
+                        ? UserProfile(
+                            username: username!,
+                            email: email!,
+                          )
                         : StoreProfile(
                             storename: username!,
                             email: email!,
@@ -150,8 +153,10 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               title: Text('logout', style: TextStyle(color: Colors.white)),
               leading: Icon(Icons.logout, color: Colors.white),
               onTap: () {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => TypeScreen()));
+                removeData();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => TypeScreen()),
+                    (Route<dynamic> route) => false);
               },
             ),
             SizedBox(height: 15),
@@ -159,5 +164,10 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> removeData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
   }
 }

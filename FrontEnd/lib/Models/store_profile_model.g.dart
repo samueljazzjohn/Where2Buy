@@ -8,8 +8,8 @@ part of 'store_profile_model.dart';
 
 StoreProfileModel _$StoreProfileModelFromJson(Map<String, dynamic> json) =>
     StoreProfileModel(
-      place: json['place'] as String? ?? ' ',
-      phone: json['phone'] as String? ?? ' ',
+      place: json['place'] as String,
+      phone: json['phone'] as String,
     );
 
 Map<String, dynamic> _$StoreProfileModelToJson(StoreProfileModel instance) =>

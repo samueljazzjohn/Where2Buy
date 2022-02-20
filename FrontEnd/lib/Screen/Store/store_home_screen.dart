@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
+import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Components/product_list.dart';
+import 'package:where2buy/Models/product_model.dart';
 import 'package:where2buy/Screen/Store/product_add_screen.dart';
 import 'package:where2buy/Widgets/button.dart';
+import 'package:where2buy/Widgets/flash.dart';
 import 'package:where2buy/Widgets/header_with_searchbox.dart';
 import 'package:where2buy/Widgets/navigation_drawer_widget.dart';
 import 'package:where2buy/Widgets/product_card.dart';
@@ -18,18 +24,47 @@ class StoreHomeScreen extends StatefulWidget {
 
 class _StoreHomeScreenState extends State<StoreHomeScreen> {
   final GlobalKey<ScaffoldState> _storeKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
+  late NetworkHandler _networkHandler;
+  List<ProductModel>? Products;
 
-  List<Widget> getChildren({required Size size}) {
-    final children = <Widget>[];
-    for (var i = 0; i < productList.length; i++) {
-      children.add(ProductCard(
-          type: widget.type,
-          size: size,
-          storeName: productList[i]['productName'],
-          storeImage: productList[i]['productImage'],
-          distance: productList[i]['price']));
+  // List<Widget> getChildren({required Size size}) {
+  //   final children = <Widget>[];
+  //   for (var i = 0; i < productList.length; i++) {
+  //     children.add(ProductCard(
+  //         type: widget.type,
+  //         size: size,
+  //         storeName: productList[i]['productName'],
+  //         storeImage: productList[i]['productImage'],
+  //         distance: productList[i]['price']));
+  //   }
+  //   return children;
+  // }
+
+  Future<List<ProductModel>> fetchData(BuildContext context) async {
+    _networkHandler = NetworkHandler(ctx: context);
+    List<ProductModel> _products = [];
+    Response res = await _networkHandler.getReq("/shop/product/get");
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      var decode = json.decode(res.body);
+      print(decode['data'].length);
+      for (int i = 0; i < (decode['data'].length); i++) {
+        print("____${decode['data'][i]}");
+        _products.add(ProductModel.fromJson(decode['data'][i]));
+      }
     }
-    return children;
+    // setState(() {
+    //   Products!.addAll(_products);
+    // });
+    return _products;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // setState(() {
+    //   Products=fetchData() as List<ProductModel>;
+    // });
   }
 
   @override
@@ -72,65 +107,36 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                 assetName: Icons.add_box_outlined),
             SizedBox(height: 30),
             Container(
-              height: size.height * 0.7,
-              child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 30,
-                  children: getChildren(size: size)),
-            )
-
-            // Container(
-            //     child: Column(children: [
-            //   Container(
-            //       child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       ProductCard(
-            //           size: size,
-            //           storeName: 'Bag',
-            //           storeImage: 'assets/images/products/bag.jpg',
-            //           distance: '\$1200'),
-            //       ProductCard(
-            //           size: size,
-            //           storeName: 'camara',
-            //           storeImage: 'assets/images/products/camara.jpeg',
-            //           distance: '\$8500'),
-            //     ],
-            //   )),
-            //   Container(
-            //       child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       ProductCard(
-            //           size: size,
-            //           storeName: 'Cycle',
-            //           storeImage: 'assets/images/products/cycle.jpg',
-            //           distance: '\$1200'),
-            //       ProductCard(
-            //           size: size,
-            //           storeName: 'Headphone',
-            //           storeImage: 'assets/images/products/headphone.jpg',
-            //           distance: '\$8500'),
-            //     ],
-            //   )),
-            //   Container(
-            //       child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       ProductCard(
-            //           size: size,
-            //           storeName: 'Stool',
-            //           storeImage: 'assets/images/products/stool.jpg',
-            //           distance: '\$1200'),
-            //       ProductCard(
-            //           size: size,
-            //           storeName: 'Shoe',
-            //           storeImage: 'assets/images/products/Shoe.jpg',
-            //           distance: '\$8500'),
-            //     ],
-            //   ))
-            // ]))
+                height: size.height * 0.7,
+                child: FutureBuilder<List<ProductModel>>(
+                    future: fetchData(context),
+                    builder: (context, snapshot) {
+                      print(snapshot.data);
+                      print(snapshot.data![0]);
+                      return snapshot.hasData
+                          ? GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 200,
+                                      childAspectRatio: 3 / 2,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 20),
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                return ProductCard(
+                                    size: size,
+                                    storeName: snapshot.data![index].pname,
+                                    storeImage: snapshot.data![index].Image,
+                                    distance:
+                                        snapshot.data![index].price.toString(),
+                                    type: widget.type);
+                              })
+                          : Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.black45,
+                              ),
+                            );
+                    }))
           ],
         ),
       ),

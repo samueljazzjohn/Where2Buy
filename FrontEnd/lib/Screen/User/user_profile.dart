@@ -6,7 +6,10 @@ import 'package:where2buy/Screen/type_screen.dart';
 import 'package:where2buy/Widgets/circular_image.dart';
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  const UserProfile({Key? key, required this.username, required this.email})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
