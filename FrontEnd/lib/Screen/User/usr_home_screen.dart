@@ -93,7 +93,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             ShopCardList(size: size, shopList: electronicShopList),
             ShopsTitleBar(
               size: size,
-              title: 'Book store',
+              title: 'Others',
               press: () =>
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ShopListScreen(
