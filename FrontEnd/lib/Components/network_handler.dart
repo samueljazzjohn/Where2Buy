@@ -126,9 +126,9 @@ class NetworkHandler {
     return baseUrl + url;
   }
 
-  NetworkImage getImage(String filename) {
+  String getImage(String filename) {
     String url = formatter(filename);
-    return NetworkImage(url);
+    return url;
   }
 
   static getToken() async {

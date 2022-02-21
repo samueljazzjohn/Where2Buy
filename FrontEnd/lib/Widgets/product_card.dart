@@ -6,7 +6,7 @@ import 'package:where2buy/Components/config.dart';
 import 'package:where2buy/Screen/Store/product_add_screen.dart';
 import 'package:where2buy/Screen/Store/store_edit_profile_screen.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final Size size;
   final String storeName;
   final String storeImage;
@@ -22,14 +22,28 @@ class ProductCard extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  late String url;
+
+  setUrl(NetworkHandler _networkHandler) {
+    url = _networkHandler.getImage(widget.storeImage);
+  }
+
+  @override
   Widget build(BuildContext context) {
     NetworkHandler _networkHandler = NetworkHandler(ctx: context);
+    setUrl(_networkHandler);
+    url = url.replaceAll(r'\', r'/');
+    print('_____inside postcard ${url}');
     return AnimatedContainer(
       duration: Duration(milliseconds: 250),
       // transform:
       margin: EdgeInsets.only(bottom: 20, left: 20),
-      width: size.width * 0.4,
-      // height: 320,
+      width: widget.size.width * 0.4,
+      // height: 130,
       child: Stack(children: [
         Column(
           children: [
@@ -37,12 +51,15 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15)),
-                child: Image.network(_networkHandler.getImage(storeImage).url,
-                    width: size.width * 0.4, height: 110, fit: BoxFit.cover)),
+                child: Image.network(url,
+                    width: widget.size.width * 0.4,
+                    height: 100,
+                    fit: BoxFit.cover)),
             // Image.asset(storeImage,
             //     width: size.width * 0.4, height: 110, fit: BoxFit.cover)),
             Container(
-                width: size.width * 0.4,
+                width: widget.size.width * 0.4,
+                height: 50,
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -61,17 +78,18 @@ class ProductCard extends StatelessWidget {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(storeName,
+                        Text(widget.storeName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold)),
-                        Text(distance, style: TextStyle(fontSize: 12))
+                        Text('Rs.${widget.distance}',
+                            style: TextStyle(fontSize: 12))
                       ]),
                 ))
           ],
         ),
-        type == 'store'
+        widget.type == 'store'
             ? Positioned(
                 top: 5,
                 right: 5,
@@ -87,12 +105,13 @@ class ProductCard extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AddProductScreen(
-                                      type: type,
+                                      type: widget.type,
                                     )));
                         break;
                       case 2:
                         for (int i = 0; i < productList.length; i++) {
-                          if (productList[i]['storeImage'] == storeImage) {
+                          if (productList[i]['storeImage'] ==
+                              widget.storeImage) {
                             productList.remove(productList[i]['storeImage']);
                           }
                         }

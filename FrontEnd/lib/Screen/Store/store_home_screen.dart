@@ -111,22 +111,23 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                 child: FutureBuilder<List<ProductModel>>(
                     future: fetchData(context),
                     builder: (context, snapshot) {
-                      print(snapshot.data);
-                      print(snapshot.data![0]);
-                      return snapshot.hasData
+                      return snapshot.data != null || snapshot.hasData
                           ? GridView.builder(
                               gridDelegate:
                                   const SliverGridDelegateWithMaxCrossAxisExtent(
                                       maxCrossAxisExtent: 200,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
+                                      childAspectRatio: 2 / 2,
+                                      crossAxisSpacing: 15,
                                       mainAxisSpacing: 20),
                               itemCount: snapshot.data!.length,
                               itemBuilder: (context, index) {
+                                print(
+                                    '_______\\${snapshot.data![index].Image}');
                                 return ProductCard(
                                     size: size,
                                     storeName: snapshot.data![index].pname,
-                                    storeImage: snapshot.data![index].Image,
+                                    storeImage:
+                                        '\\${snapshot.data![index].Image}',
                                     distance:
                                         snapshot.data![index].price.toString(),
                                     type: widget.type);

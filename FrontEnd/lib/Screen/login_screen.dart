@@ -132,12 +132,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   _userModel = UserModel.fromJson(decode);
                                 });
+                                print(_userModel);
                                 res.statusCode == 200 || res.statusCode == 201
                                     ? LoginNavigate(widget.type, _userModel!)
                                     : buildFlash(context,
                                         "Username or password incorrect");
-                              }).catchError((err) =>
-                                  {buildFlash(context, err.toString())});
+                              }).catchError((err) => {
+                                    buildFlash(
+                                        context, Future.error(err).toString())
+                                  });
 
                               setState(() {
                                 isLoading = false;
