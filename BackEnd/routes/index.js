@@ -64,7 +64,6 @@ router.post('/login',(req,res,next)=>{
         token:token,
         email:req.body.email,
         username:doc.username,
-        msg:"Success",
         type:req.body.type
       })
     }
