@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const middleware = require('../middleware')
 const uploadHelper = require('../Helpers/upload-helper');
+const shopHelper = require('../Helpers/shop-helper')
 const ProductModel = require('../models/product-model');
 const productHelper = require('../Helpers/product-helper');
 const shopModel = require('../models/shop-model');
@@ -142,13 +143,14 @@ router.post('/profileadd', middleware.athenticateToken, async function (req, res
   }
   const shop = new ShopModel({
     phone: req.body.phone,
-    place: req.body.place,
+    place: req.body.place,  
     category: req.body.category,
     // location: {
     //     'type': 'Point',
     //     'coordinates': []
     //   },
-    user: req.user.userId
+    user: req.user.userId,
+    shopImg: ""
   })
   return shop.save((err) => {
     if (err) return res.status(503).json({
@@ -168,6 +170,63 @@ router.post('/profileadd', middleware.athenticateToken, async function (req, res
   // UserModel.updateOne({_id:UserId},{})
 
 });
+
+// getting shop shop image and 
+// supermarket
+router.get('/supermarket/details',middleware.athenticateToken, async function(req,res,next){
+  var shopId= await productHelper.getShopId(mongoose.Types.ObjectId(req.user.userId))
+  var supermarket =await shopHelper.getSupermarket()
+  if(!supermarket){
+    return res.status(400).json({
+      error:'no data found'
+    })
+  }
+  return res.status(200).json({
+    data:supermarket,
+  })
+})
+
+// Grocery
+router.get('/grocery/details',middleware.athenticateToken, async function(req,res,next){
+  var shopId= await productHelper.getShopId(mongoose.Types.ObjectId(req.user.userId))
+  var grocery = await shopHelper.getGrocery()
+  if(!supermarket){
+    return res.status(400).json({
+      error:'no data found'
+    })
+  }
+  return res.status(200).json({
+    data:grocery,
+  })
+})
+
+// electric
+router.get('/electric/details',middleware.athenticateToken, async function(req,res,next){
+  var shopId= await productHelper.getShopId(mongoose.Types.ObjectId(req.user.userId))
+  var electric = await shopHelper.getElectric()
+  if(!grocery){
+    return res.status(400).json({
+      error:'no data found'
+    })
+  }
+  return res.status(200).json({
+    data:electric,
+  })
+})
+
+// others
+router.get('/others/details',middleware.athenticateToken, async function(req,res,next){
+  var shopId= await productHelper.getShopId(mongoose.Types.ObjectId(req.user.userId))
+  var others = await shopHelper.getOthers()
+  if(!electric){
+    return res.status(400).json({
+      error:'no data found'
+    })
+  }
+  return res.status(200).json({
+    data:others,
+  })
+})
 
 
 
@@ -266,6 +325,27 @@ router.get('/product/get', middleware.athenticateToken, async (req, res, next) =
   }
   return res.status(200).json({
     "data": doc
+  })
+})
+
+//  getting search result
+
+router.post('/search/details', middleware.athenticateToken, async function(req,res,next){
+  console.log(req.body)
+  var shopId= await productHelper.getShopId(mongoose.Types.ObjectId(req.user.userId))
+  var data= await ProductModel.
+  find({pname:req.body.searchItem},'store -_id')
+  .populate({path:'store',select:'user -_id',populate:{path:'user shopImg',select:'username -_id'}})
+  // .populate({path:'store.user',select:'store.username -_id'})
+  .exec()
+  console.log(data)
+  if(data){
+    return res.status(200).json({
+      data:data
+    })
+  }
+  return res.status(402).json({
+    error:err
   })
 })
 

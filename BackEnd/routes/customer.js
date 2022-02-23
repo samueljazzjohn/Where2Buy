@@ -35,12 +35,13 @@ const upload = multer({
 
 
 // getting customer details
-router.get('/details',async(req,res,next)=>{
+router.get('/details',middleware.athenticateToken,async(req,res,next)=>{
     await userHelper.getUserId(req.body.mail).then((userId)=>{
         CustomerModel.findOne({cuser:userId}).
-        populate('cuser')
+        populate()
         .exec()
         .then((data)=>{
+          console.log(data)
           if(!data){
             return res.status(403).json({
               "message":"customer not found"
@@ -59,8 +60,9 @@ router.get('/details',async(req,res,next)=>{
 })
 
 
+
 // uploading customer image 
-router.post('/upload/image', upload.single('imagefile'), async (req, res, next) => {
+router.post('/upload/image',middleware.athenticateToken, upload.single('imagefile'), async (req, res, next) => {
     console.log(req.file)
     console.log(req.body.mail)
     if (req.fileValidationError) {

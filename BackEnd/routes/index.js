@@ -60,7 +60,7 @@ router.post('/login',(req,res,next)=>{
     console.log(data)
     if(doc.password==req.body.password){
       const token = jwt.sign(JSON.stringify(data),process.env.JWT_SECRET_KEY);
-      return res.json({
+      return res.status(200).json({
         token:token,
         email:req.body.email,
         username:doc.username,
@@ -88,7 +88,7 @@ router.post('/signup', async function (req, res, next) {
 
 
 // uploading image 
-router.post('/upload/image', upload.single('imagefile'), async (req, res, next) => {
+router.post('/upload/image',middleware.athenticateToken, upload.single('imagefile'), async (req, res, next) => {
   console.log(req.file)
   console.log(req.body.mail)
   if (req.fileValidationError) {
