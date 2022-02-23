@@ -129,18 +129,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               net.postReqLogSignup("/login", body).then((res) {
                                 var decode = json.decode(res.body);
                                 print("res=$decode");
-                                setState(() {
-                                  _userModel = UserModel.fromJson(decode);
-                                });
-                                print(_userModel);
-                                res.statusCode == 200 || res.statusCode == 201
-                                    ? LoginNavigate(widget.type, _userModel!)
-                                    : buildFlash(context,
-                                        "Username or password incorrect");
-                              }).catchError((err) => {
-                                    buildFlash(
-                                        context, Future.error(err).toString())
+                                if (res.statusCode == 200 ||
+                                    res.statusCode == 2001) {
+                                  setState(() {
+                                    _userModel = UserModel.fromJson(decode);
                                   });
+                                  print(_userModel);
+                                  LoginNavigate(widget.type, _userModel!);
+                                } else {
+                                  print('password incorrect');
+                                  buildFlash(context, res.body);
+                                }
+                                // res.statusCode == 200 || res.statusCode == 201
+                                //     ? LoginNavigate(widget.type, _userModel!)
+                                //     : buildFlash(context,
+                                //         "Username or password incorrect");
+                              }).catchError((err) =>
+                                  {buildFlash(context, err.toString())});
 
                               setState(() {
                                 isLoading = false;
@@ -193,27 +198,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           )),
 
-                      // ColumnDiveder(),
+                      ColumnDiveder(),
 
-                      // const SizedBox(height: 15),
+                      const SizedBox(height: 15),
 
-                      // Container(
-                      //     child: Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     InkWell(
-                      //         onTap: () => print('google'),
-                      //         child:
-                      //             CircularAvatarWithBorder(assetName: google)),
-                      //     SizedBox(
-                      //       width: 15,
-                      //     ),
-                      //     InkWell(
-                      //         onTap: () => print('facebook'),
-                      //         child:
-                      //             CircularAvatarWithBorder(assetName: facebook))
-                      //   ],
-                      // )),
+                      Container(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                              onTap: () => print('google'),
+                              child:
+                                  CircularAvatarWithBorder(assetName: google)),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          InkWell(
+                              onTap: () => print('facebook'),
+                              child:
+                                  CircularAvatarWithBorder(assetName: facebook))
+                        ],
+                      )),
                       SizedBox(height: 2),
                     ],
                   ),

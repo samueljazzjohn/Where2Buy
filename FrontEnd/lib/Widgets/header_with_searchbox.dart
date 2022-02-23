@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:where2buy/Components/config.dart';
 
-class HeaderWithSearchbox extends StatelessWidget {
+class HeaderWithSearchbox extends StatefulWidget {
   const HeaderWithSearchbox({Key? key}) : super(key: key);
+
+  @override
+  State<HeaderWithSearchbox> createState() => _HeaderWithSearchboxState();
+}
+
+class _HeaderWithSearchboxState extends State<HeaderWithSearchbox> {
+  Map<String, dynamic> data = {'searchItem': ''};
+  final TextEditingController _searchController = TextEditingController();
+  bool isSearch = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +73,7 @@ class HeaderWithSearchbox extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 15.0),
                               child: TextFormField(
+                                controller: _searchController,
                                 cursorColor: primaryBlack,
                                 onChanged: (value) =>
                                     print('search field tapped'),
@@ -76,12 +86,19 @@ class HeaderWithSearchbox extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: SvgPicture.asset(
-                              search,
-                              color: Colors.black45,
-                            ),
-                          )
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    data['searchItem'] = _searchController.text;
+                                    isSearch = !isSearch;
+                                  });
+                                },
+                                child: SvgPicture.asset(
+                                  !isSearch ? search : close,
+                                  color: Colors.black45,
+                                ),
+                              ))
                         ],
                       ),
                     ))

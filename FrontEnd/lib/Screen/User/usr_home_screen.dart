@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:where2buy/Components/app_bar.dart';
 import 'package:where2buy/Components/shop_list.dart';
+import 'package:where2buy/Screen/User/widget/search_list.dart';
 import 'package:where2buy/Screen/User/widget/shop_card_list.dart';
 import 'package:where2buy/Screen/User/shop_list_screen.dart';
+import 'package:where2buy/Screen/User/widget/shop_list.dart';
 import 'package:where2buy/Screen/User/widget/shops_titlebar.dart';
 import 'package:where2buy/Screen/type_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,6 +22,9 @@ class UserHomeScreen extends StatefulWidget {
 }
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
+  bool isSearch = false;
+  final TextEditingController _searchController = TextEditingController();
+  Map<String, dynamic> data = {'searchItem': ''};
   final GlobalKey<ScaffoldState> _userKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -53,56 +58,104 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         body: SingleChildScrollView(
             child: Column(
           children: [
-            HeaderWithSearchbox(),
-            ShopsTitleBar(
-                size: size,
-                title: 'SuperMarket',
-                press: () {
-                  print('more pressed');
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ShopListScreen(
-                      shopList: superMarketList,
-                      shopName: 'SuperMarket',
-                    );
-                  }));
-                }),
-            ShopCardList(size: size, shopList: superMarketList),
-            ShopsTitleBar(
-              size: size,
-              title: 'Gocery Shop',
-              press: () =>
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ShopListScreen(
-                  shopList: groceryShopList,
-                  shopName: 'Grocery Shop',
-                );
-              })),
-            ),
-            ShopCardList(size: size, shopList: groceryShopList),
-            ShopsTitleBar(
-              size: size,
-              title: 'Electronic shop',
-              press: () =>
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ShopListScreen(
-                  shopList: electronicShopList,
-                  shopName: 'Electronic Shop',
-                );
-              })),
-            ),
-            ShopCardList(size: size, shopList: electronicShopList),
-            ShopsTitleBar(
-              size: size,
-              title: 'Others',
-              press: () =>
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ShopListScreen(
-                  shopList: bookShopList,
-                  shopName: 'Book Store',
-                );
-              })),
-            ),
-            ShopCardList(size: size, shopList: bookShopList)
+            Container(
+                child: Column(
+              children: [
+                Container(
+                    // margin: EdgeInsets.only(bottom:30),
+                    height: size.height * 0.2,
+                    child: Stack(
+                      children: [
+                        Container(
+                            height: size.height * 0.2 - 27,
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                            decoration: BoxDecoration(
+                                color: primaryBlack,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(36),
+                                    bottomRight: Radius.circular(36))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Where2Buy',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.shopping_cart_outlined,
+                                    color: Colors.white,
+                                    size: 25,
+                                  )
+                                ],
+                              ),
+                            )),
+                        Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 10),
+                                        blurRadius: 50,
+                                        color: primaryBlack.withOpacity(0.23))
+                                  ]),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 15.0),
+                                      child: TextFormField(
+                                        controller: _searchController,
+                                        cursorColor: primaryBlack,
+                                        onChanged: (value) =>
+                                            print('search field tapped'),
+                                        decoration: InputDecoration(
+                                            hintText: 'Search',
+                                            hintStyle: TextStyle(
+                                                color: Colors.black45),
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: InputBorder.none),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 15.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            data['searchItem'] =
+                                                _searchController.text;
+                                            isSearch = !isSearch;
+                                          });
+                                        },
+                                        child: SvgPicture.asset(
+                                          !isSearch ? search : close,
+                                          color: Colors.black45,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ))
+                      ],
+                    ))
+              ],
+            )),
+            !isSearch
+                ? ShopList(size: size)
+                : SearchList(
+                    searchData: data,
+                  )
           ],
         )));
   }

@@ -39,7 +39,7 @@ class _StoreEditProfileScreenState extends State<StoreEditProfileScreen> {
   final items = [
     'Super Market',
     'Grocery Shop',
-    'Cosmetic Shop',
+    // 'Cosmetic Shop',
     'Electronic Shop',
     'others'
   ];

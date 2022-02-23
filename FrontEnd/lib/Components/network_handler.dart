@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class NetworkHandler {
   BuildContext ctx;
   NetworkHandler({required this.ctx});
-  String baseUrl = 'https://where2buy-2022.herokuapp.com';
+  String baseUrl = "https://where2buy-2022.herokuapp.com";
   // String baseUrl = 'http://127.0.0.1:55981';
   var log = Logger();
 

@@ -29,6 +29,7 @@ String more = 'assets/icons/more-2-fill.svg';
 String setLocation = 'assets/icons/focus-3-line.svg';
 String add = 'assets/icons/add-box-line.svg';
 String addImage = 'assets/icons/image-add-line.svg';
+String close = 'assets/icons/close-fill.svg';
 
 //assetProfilePic
 
