@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:where2buy/Models/shop_card_model.dart';
-import 'package:where2buy/Models/shop_image_model.dart';
+import 'package:where2buy/Models/shop_name_model.dart';
 
 part 'search_shop_model.g.dart';
 

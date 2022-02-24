@@ -47,7 +47,10 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
     Response res = await _networkHandler.getReq("/shop/product/get");
     if (res.statusCode == 200 || res.statusCode == 201) {
       var decode = json.decode(res.body);
-      print(decode['data'].length);
+      print('____${decode['data'].length}');
+      if (decode['data'].length == 0) {
+        return _products;
+      }
       for (int i = 0; i < (decode['data'].length); i++) {
         print("____${decode['data'][i]}");
         _products.add(ProductModel.fromJson(decode['data'][i]));
@@ -107,11 +110,14 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                 assetName: Icons.add_box_outlined),
             SizedBox(height: 30),
             Container(
+                padding: EdgeInsets.only(bottom: 15),
                 height: size.height * 0.7,
                 child: FutureBuilder<List<ProductModel>>(
                     future: fetchData(context),
                     builder: (context, snapshot) {
-                      return snapshot.data != null || snapshot.hasData
+                      return snapshot.data != null ||
+                              snapshot.hasData ||
+                              snapshot.data == []
                           ? GridView.builder(
                               gridDelegate:
                                   const SliverGridDelegateWithMaxCrossAxisExtent(

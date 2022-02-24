@@ -52,7 +52,7 @@ class NetworkHandler {
           .post(Uri.parse(url),
               headers: {
                 "Content-type": 'application/json',
-                "Authorization": "Bearer $token".toString()
+                "Authorization": "Bearer $token"
                 // "Authorization": '$token'
               },
               body: body)

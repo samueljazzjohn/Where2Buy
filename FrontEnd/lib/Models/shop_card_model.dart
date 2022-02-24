@@ -1,13 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:where2buy/Models/shop_image_model.dart';
+import 'package:where2buy/Models/shop_name_model.dart';
 
 part 'shop_card_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(nullable: true)
 class ShopCardModel {
-  String username;
-  ShopImageModel user;
-  ShopCardModel({required this.username, required this.user});
+  String shopImg;
+  ShopNameModel user;
+  ShopCardModel({required this.shopImg, required this.user});
 
   factory ShopCardModel.fromJson(Map<String, dynamic> json) =>
       _$ShopCardModelFromJson(json);

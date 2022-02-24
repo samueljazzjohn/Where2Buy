@@ -8,12 +8,12 @@ part of 'shop_card_model.dart';
 
 ShopCardModel _$ShopCardModelFromJson(Map<String, dynamic> json) =>
     ShopCardModel(
-      username: json['username'] as String,
-      user: ShopImageModel.fromJson(json['user'] as Map<String, dynamic>),
+      shopImg: json['shopImg'] as String,
+      user: ShopNameModel.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ShopCardModelToJson(ShopCardModel instance) =>
     <String, dynamic>{
-      'username': instance.username,
+      'shopImg': instance.shopImg,
       'user': instance.user,
     };

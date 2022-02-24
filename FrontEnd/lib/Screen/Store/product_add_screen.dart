@@ -101,7 +101,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               final body = jsonEncode(data);
                               print(data);
                               _networkHandler
-                                  .postReq('/shop/product/add', body.toString())
+                                  .postReq('/shop/product/add', body)
                                   .then((res) => {
                                         if (res.statusCode == 200 ||
                                             res.statusCode == 201)
