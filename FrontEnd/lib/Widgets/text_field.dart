@@ -9,6 +9,7 @@ class InputField extends StatefulWidget {
   final bool isMail;
   final bool isNumber;
   final IconData? textfieldIcon;
+  final bool isUpdate;
   const InputField(
       {Key? key,
       required this.controller,
@@ -16,6 +17,7 @@ class InputField extends StatefulWidget {
       this.textfieldIcon,
       this.labelText,
       this.isMail = false,
+      this.isUpdate = false,
       this.isNumber = false,
       this.isPass = false})
       : super(key: key);
@@ -39,7 +41,7 @@ class _InputFieldState extends State<InputField> {
         height: 80,
         child: TextFormField(
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value == null || value.isEmpty && !widget.isUpdate) {
               String? text = widget.labelText;
               return '$text shouldn\'t be empty';
             }

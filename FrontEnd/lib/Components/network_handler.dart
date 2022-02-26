@@ -66,7 +66,68 @@ class NetworkHandler {
       print("timeouterror");
       throw "Server not responding..please try again later!!!";
     } catch (e) {
+      // throw "something wrong";
+      return Future.error(e.toString());
+      // throw "Something went wrong...please try again later!!!";
+    }
+    print(response.body);
+    return response;
+  }
+
+  Future<http.Response> deleteReq(String url, String body) async {
+    url = formatter(url);
+    http.Response response;
+    String token = await getToken();
+    try {
+      response = await http
+          .delete(Uri.parse(url),
+              headers: {
+                "Content-type": 'application/json',
+                "Authorization": "Bearer $token"
+              },
+              body: body)
+          .timeout(Duration(seconds: 75));
+      print("response:${response.statusCode}");
+      log.i(response.body);
+    } on SocketException catch (e) {
+      print("Socket exception:${e.message}");
+      throw "Internet not connected!!!";
+    } on TimeoutException catch (e) {
+      print("timeouterror");
+      throw "Server not responding..please try again later!!!";
+    } catch (e) {
       return Future.error(e);
+      // throw "Something went wrong...please try again later!!!";
+    }
+    print(response.body);
+    return response;
+  }
+
+  Future<http.Response> patchReq(String url, String body) async {
+    url = formatter(url);
+    http.Response response;
+    String token = await getToken();
+    try {
+      response = await http
+          .patch(Uri.parse(url),
+              headers: {
+                "Content-type": 'application/json',
+                "Authorization": "Bearer $token"
+                // "Authorization": '$token'
+              },
+              body: body)
+          .timeout(Duration(seconds: 75));
+      print("response:${response.statusCode}");
+      log.i(response.body);
+    } on SocketException catch (e) {
+      print("Socket exception:${e.message}");
+      throw "Internet not connected!!!";
+    } on TimeoutException catch (e) {
+      print("timeouterror");
+      throw "Server not responding..please try again later!!!";
+    } catch (e) {
+      // throw "something wrong";
+      return Future.error(e.toString());
       // throw "Something went wrong...please try again later!!!";
     }
     print(response.body);
@@ -100,21 +161,23 @@ class NetworkHandler {
     return response;
   }
 
-  Future<http.StreamedResponse> patchImage(
-      String url, String filepath, String type) async {
+  Future<http.StreamedResponse> patchImage(String url, String filepath) async {
     url = formatter(url);
+    // http.Response response;
+    String token = await getToken();
     try {
       var request = http.MultipartRequest('PATCH', Uri.parse(url));
       request.files.add(await http.MultipartFile.fromPath("img", filepath));
       request.headers.addAll({
         "Content-type": "multipart/form-data",
+        "Authorization": "Bearer $token"
       });
-      request.fields['type'] = type;
-      var response = request.send();
+      // request.fields['type'] = type;
+      var response = await request.send();
       log.i(response);
       return response;
     } on SocketException catch (e) {
-      throw "internet not connected";
+      throw "Server error";
     } on TimeoutException catch (e) {
       throw "Server not responding...Please try again later";
     } catch (e) {

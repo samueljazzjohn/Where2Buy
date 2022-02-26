@@ -110,7 +110,7 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                 assetName: Icons.add_box_outlined),
             SizedBox(height: 30),
             Container(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 100),
                 height: size.height * 0.7,
                 child: FutureBuilder<List<ProductModel>>(
                     future: fetchData(context),
@@ -130,6 +130,7 @@ class _StoreHomeScreenState extends State<StoreHomeScreen> {
                                 print(
                                     '_______\\${snapshot.data![index].Image}');
                                 return ProductCard(
+                                    productId: snapshot.data![index].id,
                                     size: size,
                                     storeName: snapshot.data![index].pname,
                                     storeImage:

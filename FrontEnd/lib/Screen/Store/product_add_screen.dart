@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:html';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -15,8 +16,19 @@ import 'package:where2buy/Widgets/text_field.dart';
 import '../../Widgets/bottom_sheet.dart';
 
 class AddProductScreen extends StatefulWidget {
+  final String? Image;
+  // final bool isNetImage;
+  final bool isUpdate;
+  final String productId;
   final String type;
-  const AddProductScreen({Key? key, required this.type}) : super(key: key);
+  const AddProductScreen(
+      {Key? key,
+      this.Image,
+      required this.type,
+      // this.isNetImage = false,
+      this.productId = '0',
+      this.isUpdate = false})
+      : super(key: key);
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -36,13 +48,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     NetworkHandler _networkHandler = NetworkHandler(ctx: context);
+    print('lllllllllllll${widget.Image}');
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: primaryBlack,
       ),
-      body: Container(
+      body: AnimatedContainer(
+          duration: Duration(milliseconds: 250),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           // width: size.width * 0.8,
           child: SingleChildScrollView(
@@ -57,12 +71,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     )),
                 SizedBox(height: 20),
                 Center(
-                    child: Image.file(
-                  productImage,
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
-                )),
+                    child: widget.Image == null
+                        ? Image.file(
+                            productImage,
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.contain,
+                          )
+                        : Image.network(widget.Image!,
+                            width: 120, height: 120, fit: BoxFit.cover)),
                 SizedBox(height: 20),
                 AddButton(
                     btnText: 'Add Image',
@@ -75,11 +92,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     key: productFormKey,
                     child: Container(
                         child: Column(children: [
-                      InputField(controller: _pname, hintText: 'Product Name'),
+                      InputField(
+                        controller: _pname,
+                        hintText: 'Product Name',
+                        labelText: 'Product Name',
+                        isUpdate: true,
+                      ),
                       SizedBox(height: 15),
-                      InputField(controller: _price, hintText: 'Price'),
+                      InputField(
+                        controller: _price,
+                        hintText: 'Price',
+                        labelText: 'Price',
+                        isNumber: true,
+                        isUpdate: true,
+                      ),
                       SizedBox(height: 15),
-                      InputField(controller: _quantity, hintText: 'Quantity'),
+                      InputField(
+                          controller: _quantity,
+                          hintText: 'Quantity',
+                          labelText: 'Quantity',
+                          isUpdate: true,
+                          isNumber: true),
                       SizedBox(height: 15),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -93,48 +126,72 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   BorderSide(width: 1, color: Colors.black54)),
                           onPressed: () {
                             if (productFormKey.currentState!.validate()) {
-                              Map<String, dynamic> data = {
-                                'pname': _pname.text,
-                                'qty': _quantity.text,
-                                'price': _price.text,
-                              };
+                              Map<String, dynamic> data = widget.isUpdate
+                                  ? {
+                                      'pname': _pname.text,
+                                      'qty': _quantity.text,
+                                      'price': _price.text,
+                                      'id': widget.productId
+                                    }
+                                  : {
+                                      'pname': _pname.text,
+                                      'qty': _quantity.text,
+                                      'price': _price.text,
+                                    };
                               final body = jsonEncode(data);
                               print(data);
-                              _networkHandler
-                                  .postReq('/shop/product/add', body)
-                                  .then((res) => {
-                                        if (res.statusCode == 200 ||
-                                            res.statusCode == 201)
-                                          {
-                                            buildFlash(context,
-                                                "Product added successfully"),
-                                            // _networkHandler.patchImage(
-                                            //     "/product/image/update",
-                                            //     productImage.path,
-                                            //     'product'),
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: ((context) {
-                                              return StoreHomeScreen(
-                                                  type: 'store');
-                                            })))
-                                          },
-                                        if (res.body == 'Forbidden')
-                                          {
-                                            buildFlash(
-                                                context, "jwt malformed"),
-                                            Navigator.of(context)
-                                                .pushAndRemoveUntil(
+                              !(widget.isUpdate)
+                                  ? _networkHandler
+                                      .postReq('/shop/product/add', body)
+                                      .then((res) async => {
+                                            if (res.statusCode == 200 ||
+                                                res.statusCode == 201)
+                                              {
+                                                buildFlash(context,
+                                                    "Product added successfully"),
+                                                await _networkHandler.patchImage(
+                                                    "/shop/product/image/update",
+                                                    productImage.path),
+                                                Navigator.push(context,
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LoginScreen(
-                                                                type: 'store')),
-                                                    (route) => false)
-                                          }
-                                      })
-                                  .catchError((err) => {
-                                        {buildFlash(context, err.toString())},
-                                      });
+                                                        builder: ((context) {
+                                                  return StoreHomeScreen(
+                                                      type: 'store');
+                                                })))
+                                              },
+                                          })
+                                      .catchError((err) => {
+                                            {
+                                              buildFlash(
+                                                  context, err.toString())
+                                            },
+                                          })
+                                  : _networkHandler
+                                      .patchReq('/shop/product/update', body)
+                                      .then((res) => {
+                                            if (res.statusCode == 200 ||
+                                                res.statusCode == 201)
+                                              {
+                                                buildFlash(context,
+                                                    "Product updated successfully"),
+                                                // _networkHandler.patchImage(
+                                                //     "/product/image/update",
+                                                //     productImage.path,
+                                                //     'product'),
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: ((context) {
+                                                  return StoreHomeScreen(
+                                                      type: 'store');
+                                                })))
+                                              },
+                                          })
+                                      .catchError((err) => {
+                                            {
+                                              buildFlash(
+                                                  context, err.toString())
+                                            },
+                                          });
                             }
                           },
                           child: isLoading

@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -128,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               net = NetworkHandler(ctx: context);
                               net.postReqLogSignup("/login", body).then((res) {
                                 var decode = json.decode(res.body);
-                                print("res=$decode");
+                                print(res.statusCode);
                                 if (res.statusCode == 200 ||
                                     res.statusCode == 2001) {
                                   setState(() {
@@ -233,11 +235,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   LoginNavigate(String type, UserModel model) {
     storeValue(type, model);
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
       return widget.type == 'user'
           ? UserHomeScreen(type: widget.type)
           : StoreHomeScreen(type: widget.type);
-    }));
+    }), (Route<dynamic> route) => false);
   }
 
   Future<void> storeValue(String type, UserModel model) async {

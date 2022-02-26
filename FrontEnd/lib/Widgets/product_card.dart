@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart';
 import 'package:where2buy/Components/network_handler.dart';
 import 'package:where2buy/Components/product_list.dart';
 import 'package:where2buy/Components/config.dart';
 import 'package:where2buy/Screen/Store/product_add_screen.dart';
 import 'package:where2buy/Screen/Store/store_edit_profile_screen.dart';
+import 'package:where2buy/Screen/Store/store_home_screen.dart';
+import 'package:where2buy/Widgets/flash.dart';
 
 class ProductCard extends StatefulWidget {
   final Size size;
@@ -12,13 +17,15 @@ class ProductCard extends StatefulWidget {
   final String storeImage;
   final String distance;
   final String type;
+  final String productId;
   const ProductCard(
       {Key? key,
       required this.size,
       required this.storeName,
       required this.storeImage,
       required this.distance,
-      required this.type})
+      required this.type,
+      this.productId = '0'})
       : super(key: key);
 
   @override
@@ -29,7 +36,9 @@ class _ProductCardState extends State<ProductCard> {
   late String url;
 
   setUrl(NetworkHandler _networkHandler) {
-    url = _networkHandler.getImage(widget.storeImage);
+    setState(() {
+      url = _networkHandler.getImage(widget.storeImage);
+    });
   }
 
   @override
@@ -98,24 +107,40 @@ class _ProductCardState extends State<ProductCard> {
                     PopupMenuItem(child: Text('Edit'), value: 1),
                     PopupMenuItem(child: Text('Delete'), value: 2)
                   ],
-                  onSelected: (choice) {
+                  onSelected: (choice) async {
                     switch (choice) {
                       case 1:
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AddProductScreen(
+                                      isUpdate: true,
+                                      Image: url,
+                                      productId: widget.productId,
                                       type: widget.type,
                                     )));
                         break;
                       case 2:
-                        for (int i = 0; i < productList.length; i++) {
-                          if (productList[i]['storeImage'] ==
-                              widget.storeImage) {
-                            productList.remove(productList[i]['storeImage']);
-                          }
+                        Map<String, dynamic> body = {'id': widget.productId};
+                        var data = jsonEncode(body);
+                        Response res = await _networkHandler.deleteReq(
+                            "/shop/product/delete", data);
+                        if (res.statusCode == 200 || res.statusCode == 201) {
+                          buildFlash(context, 'Product deleted successfully');
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: ((context) {
+                            return StoreHomeScreen(type: 'store');
+                          })));
+                        } else {
+                          buildFlash(context, res.body);
                         }
-                        print(productList);
+                        // for (int i = 0; i < productList.length; i++) {
+                        //   if (productList[i]['storeImage'] ==
+                        //       widget.storeImage) {
+                        //     productList.remove(productList[i]['storeImage']);
+                        //   }
+                        // }
+                        // print(productList);
                         break;
                     }
                   },

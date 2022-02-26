@@ -80,6 +80,11 @@ class _SearchListState extends State<SearchList> {
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: ((context) {
                                         return ShopDetailsScreen(
+                                            place: snapshot
+                                                .data![index].store.place,
+                                            phone: snapshot
+                                                .data![index].store.place,
+                                            id: snapshot.data![index].store.id,
                                             shopName: snapshot.data![index]
                                                 .store.user.username,
                                             shopImage:

@@ -23,7 +23,7 @@ String menu = 'assets/icons/menu-4-fill.svg';
 String search = 'assets/icons/search-line.svg';
 String arrowRight = 'assets/icons/arrow-right-circle-fill.svg';
 String camara = 'assets/icons/camera-line.svg';
-String phone = 'assets/icons/phone-fill.svg';
+String phoneIcon = 'assets/icons/phone-fill.svg';
 String map = 'assets/icons/map-pin-2-fill.svg';
 String more = 'assets/icons/more-2-fill.svg';
 String setLocation = 'assets/icons/focus-3-line.svg';
@@ -37,4 +37,6 @@ String profile = 'assets/images/profile/sampic.jpg';
 
 // assetProducts
 
-String dummy = '/assets/images/products/dummy.png';
+String dummy1 = 'assets/images/products/dummy.png';
+
+String dummy = 'T:\\where2buy\\FrontEnd\\assets\\images\\products\\dummy.png';

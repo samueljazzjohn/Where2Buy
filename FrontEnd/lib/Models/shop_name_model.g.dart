@@ -8,7 +8,7 @@ part of 'shop_name_model.dart';
 
 ShopNameModel _$ShopNameModelFromJson(Map<String, dynamic> json) =>
     ShopNameModel(
-      username: json['username'] as String? ?? '',
+      username: json['username'] as String,
     );
 
 Map<String, dynamic> _$ShopNameModelToJson(ShopNameModel instance) =>
