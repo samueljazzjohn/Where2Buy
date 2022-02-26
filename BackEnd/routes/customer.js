@@ -2,12 +2,15 @@ var express = require('express');
 var router = express.Router();
 var CustomerModel = require('../models/customer-model')
 var userHelper = require('../Helpers/user-helper')
+var productHelper = require('../Helpers/product-helper')
+var ProductModel = require('../models/product-model')
 const multer = require('multer')
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const middleware = require('../middleware')
 const uploadHelper = require('../Helpers/upload-helper');
+const mongoose = require('mongoose')
 
 
 dotenv.config()
@@ -80,5 +83,21 @@ router.post('/upload/image',middleware.athenticateToken, upload.single('imagefil
       })
     }
   });
+
+  //  Getting product details
+
+  router.post('/product/get', middleware.athenticateToken, async (req, res, next) => {
+    // userHelper.getUserId(req.body.mail).then((userId) => {
+    console.log(req.body)
+    const doc = await ProductModel.find({ store: mongoose.Types.ObjectId(req.body.id) }).select('pname qty price Image').exec()
+    console.log(doc)
+    if (!doc || doc == null) {
+      return res.status(403).json({ "Message": "error" })
+    }
+    return res.status(200).json({
+      "data": doc
+    })
+  })
+
 
   module.exports = router;
