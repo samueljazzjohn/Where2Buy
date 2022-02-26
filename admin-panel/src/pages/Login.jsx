@@ -32,7 +32,9 @@ const Login = () => {
         console.log(data)
         if (data.username === 'admin' && data.password === 'admin123') {
             console.log("hi")
-            history.push('layout')
+            // history.push('layout')
+            // return <Redirect to="/Layout" />;
+            return <Layout />
         } else {
             Swal.fire({
                 icon: 'error',

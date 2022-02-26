@@ -26,7 +26,7 @@ document.title = 'Where2Buy'
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <Routes />
+      <Layout />
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')
